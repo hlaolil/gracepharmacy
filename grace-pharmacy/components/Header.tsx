@@ -2,13 +2,12 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import Image from 'next/image'
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/about', label: 'About Us' },
+  { href: '/about', label: 'About' },
   { href: '/products', label: 'Products' },
-  { href: '/contact', label: 'Contact Us' },
+  { href: '/contact', label: 'Contact' },
 ]
 
 export default function Header() {
@@ -17,9 +16,13 @@ export default function Header() {
 
   return (
     <header className="site-header">
-      <Link href="/" className="logo">
-        <Image src="/images/pharmacy-logo.webp" alt="Grace Pharmacy Logo" width={44} height={44} />
-        <span className="logo-text">Grace <span>Pharmacy</span></span>
+      <Link href="/" className="logo" onClick={() => setOpen(false)}>
+        <span className="logo-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7V3z" fill="#F6F1E4" />
+          </svg>
+        </span>
+        <span className="logo-text">Grace Pharmacy</span>
       </Link>
 
       <button
@@ -34,7 +37,7 @@ export default function Header() {
         <span className="bar" />
       </button>
 
-      <nav id="navigation" className={open ? 'open' : ''}>
+      <nav id="navigation" className={`primary-nav ${open ? 'open' : ''}`}>
         <ul>
           {navLinks.map(({ href, label }) => (
             <li key={href}>
@@ -49,6 +52,10 @@ export default function Header() {
           ))}
         </ul>
       </nav>
+
+      <Link href="/#refill" className="btn btn-rust header-cta">
+        Refill Rx
+      </Link>
     </header>
   )
 }

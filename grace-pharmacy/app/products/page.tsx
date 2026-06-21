@@ -1,42 +1,47 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import Hero from '@/components/Hero'
+import PageHero from '@/components/PageHero'
 
 export const metadata: Metadata = {
-  title: 'Products | Grace Pharmacy',
+  title: 'Products',
   description:
-    "Explore Grace Pharmacy's extensive range of health and wellness products. From prescription medicines to over-the-counter remedies, we provide quality care for you and your family.",
+    "Explore Grace Pharmacy's range of health and wellness products — pain relief, cold and flu remedies, vitamins, and home health devices.",
+  alternates: { canonical: '/products' },
 }
 
 const products = [
   {
     img: 'product1',
-    alt: 'Pain Relief Medication',
+    alt: 'Pain relief medication',
+    tag: 'Dispensary & OTC',
     name: 'Pain Relief Medication',
     desc: 'Effective relief from headaches, muscle aches, and joint pain. Available in both prescription and over-the-counter options.',
-    tags: ['Dosage: 200mg tablets', 'Price: $15 per pack', '20 tablets per pack'],
+    specs: ['200mg tablets', '$15 / pack', '20 tablets / pack'],
   },
   {
     img: 'product2',
-    alt: 'Cold & Flu Relief',
+    alt: 'Cold and flu relief',
+    tag: 'OTC',
     name: 'Cold & Flu Relief',
     desc: 'Stay on top of your cold symptoms with our fast-acting cold and flu remedy, providing relief from congestion and fever.',
-    tags: ['Dosage: 500mg capsules', 'Price: $12 per pack', '10 capsules per pack'],
+    specs: ['500mg capsules', '$12 / pack', '10 capsules / pack'],
   },
   {
     img: 'product3',
-    alt: 'Vitamins & Supplements',
+    alt: 'Vitamins and supplements',
+    tag: 'Wellness',
     name: 'Vitamins & Supplements',
     desc: 'Boost your immunity and health with our range of vitamins, including Vitamin C, D, and multivitamins.',
-    tags: ['Capsules and gummies', 'Price: $10 per bottle', '30 servings per bottle'],
+    specs: ['Capsules & gummies', '$10 / bottle', '30 servings / bottle'],
   },
   {
     img: 'product4',
-    alt: 'Blood Pressure Monitor',
+    alt: 'Blood pressure monitor',
+    tag: 'Home device',
     name: 'Blood Pressure Monitor',
     desc: 'Track your health with ease using our reliable, easy-to-use blood pressure monitor for home use.',
-    tags: ['Digital, battery-operated', 'Price: $50', 'Monitor, batteries, case'],
+    specs: ['Digital, battery-operated', '$50', 'Monitor + batteries + case'],
   },
 ]
 
@@ -52,57 +57,80 @@ const tableRows = [
 export default function ProductsPage() {
   return (
     <main>
-      <Hero title="Explore Our Health Products" />
+      <PageHero
+        eyebrow="On the shelf"
+        title="Everything you need for everyday health"
+        description="From dispensary medication to the things you grab on your way out — stocked, explained, and ready when you are."
+      />
 
-      <section className="cta-banner">
-        <h2>Find Everything You Need</h2>
-        <p>For more information on any product, reach out to our team.</p>
-        <Link href="/contact" className="btn btn-white">
-          Contact Us
-        </Link>
-      </section>
-
-      <section className="section container">
-        <h2 className="section-title">Featured Products</h2>
-        <div className="product-list">
-          {products.map((p) => (
-            <article className="product-card" key={p.img}>
-              <Image src={`/images/${p.img}.webp`} alt={p.alt} width={300} height={160} loading="lazy" />
-              <div className="product-info">
-                <h2>{p.name}</h2>
-                <p>{p.desc}</p>
-                <ul>
-                  {p.tags.map((t) => (
-                    <li key={t}>{t}</li>
-                  ))}
-                </ul>
-              </div>
-            </article>
-          ))}
+      <section className="section section-white">
+        <div className="container">
+          <div className="section-head">
+            <span className="eyebrow">Featured</span>
+            <h2>Popular products</h2>
+          </div>
+          <div className="product-list">
+            {products.map((p) => (
+              <article className="product-card" key={p.img}>
+                <div className="product-media">
+                  <Image src={`/images/${p.img}.webp`} alt={p.alt} fill style={{ objectFit: 'cover' }} loading="lazy" />
+                </div>
+                <div className="product-body">
+                  <span className="label-tag">{p.tag}</span>
+                  <h3>{p.name}</h3>
+                  <p>{p.desc}</p>
+                  <div className="product-specs">
+                    {p.specs.map((s) => (
+                      <span key={s}>{s}</span>
+                    ))}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="section section-alt container product-table">
-        <h2 className="section-title">Available Products</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Product Name</th>
-              <th>Dosage/Type</th>
-              <th>Price</th>
-              <th>Includes</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableRows.map((row) => (
-              <tr key={row[0]}>
-                {row.map((cell, i) => (
-                  <td key={i}>{cell}</td>
+      <section className="section" style={{ background: 'var(--parchment-dim)' }}>
+        <div className="container">
+          <div className="section-head">
+            <span className="eyebrow">Full list</span>
+            <h2>Available products</h2>
+            <p>Prices shown are guideline retail prices — ask in-store for current stock and insurance coverage.</p>
+          </div>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Dosage / Type</th>
+                  <th>Price</th>
+                  <th>Includes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableRows.map((row) => (
+                  <tr key={row[0]}>
+                    {row.map((cell, i) => (
+                      <td key={i}>{cell}</td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section className="cta-banner">
+        <div className="container">
+          <span className="eyebrow">Not sure what you need?</span>
+          <h2>Ask before you buy</h2>
+          <p>Our pharmacists can recommend the right product for your symptoms — no charge for the advice.</p>
+          <Link href="/contact" className="btn btn-pine">
+            Contact us
+          </Link>
+        </div>
       </section>
     </main>
   )

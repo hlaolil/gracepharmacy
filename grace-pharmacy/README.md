@@ -1,45 +1,62 @@
 # Grace Pharmacy — Next.js Site
 
-A Next.js (App Router) rebuild of the Grace Pharmacy static site, ready to deploy on Vercel.
+A Next.js 14 (App Router) site for Grace Pharmacy, a community pharmacy in Morija, Lesotho. Built with a distinctive "apothecary label" visual identity, a working refill form, richer content, and SEO fundamentals — ready to deploy on Vercel.
 
-## What changed from the original HTML site
+## Design
 
-- Converted to Next.js 14 App Router with TypeScript.
-- Shared `Header` and `Footer` are now single React components rendered once in `app/layout.tsx`, instead of being copy-pasted into every page.
-- The hamburger menu and active nav-link highlighting are handled with React state (`components/Header.tsx`) instead of vanilla JS.
-- The prescription refill form (`components/RefillForm.tsx`) does the same validation as the original `pattern` attributes, but in React with inline error messages.
-- All `images/*.webp` references now live in `public/images/` and are served by `next/image`.
-- Per-page `<title>` and meta description tags are set via each page's `metadata` export.
+The site moves away from generic medical blue/teal toward an apothecary palette inspired by prescription labels and pharmacy stock:
+
+- **Pine green** (`#1F3D2B`) — primary, grounded and herbal rather than clinical
+- **Parchment** (`#F6F1E4`) — warm background, like label stock
+- **Rust** (`#C65D3B`) — accent for calls to action
+- **Fraunces** (serif display) + **Inter** (body) + **JetBrains Mono** (labels, dosages, hours)
+
+The signature element is the **prescription-label motif**: rounded cards with a dashed/perforated top edge, used for the hero's opening-hours widget and throughout the services and product layouts.
+
+## What's new in this version
+
+- **Full visual redesign** — new color system, typography, hero, service/product cards, timeline, FAQ accordion, stats strip.
+- **Working refill form** — `components/RefillForm.tsx` now submits to a real API route (`app/api/refill/route.ts`) with server-side validation, loading state, and success/error messaging. Currently the route logs submissions server-side; see "Wiring up real submissions" below to connect it to email, SMS, or a database.
+- **Richer content** — About page now has a founding story timeline; Contact page has opening hours, a team grid, and an FAQ section; Products page splits featured items from a full price table.
+- **SEO** — per-page metadata (title templates, canonical URLs, Open Graph/Twitter tags), `app/sitemap.ts`, `app/robots.ts`, and `Pharmacy` JSON-LD structured data on the home page for local search/maps.
+- **Accessibility** — visible focus states, `aria-expanded`/`aria-controls` on the mobile menu, reduced-motion support, decorative images marked `aria-hidden`.
 
 ## ⚠️ Placeholder images
 
-No image assets were included in the files you uploaded — only the HTML. So this project ships with **generated placeholder `.webp` images** (solid color blocks with labels) in `public/images/` so the site builds and runs correctly out of the box.
+No real photos were provided, so `public/images/` contains **generated placeholder `.webp` images** in the new color palette (solid blocks with labels) so the site builds and looks coherent out of the box.
 
-**Before going live, replace these with your real photos**, keeping the same filenames (or update the references in the page files):
+**Before going live, replace these with real photos**, keeping the same filenames (or update the references in the page files):
 
-- `pharmacy-logo.webp`, `pharmacy-hero.webp`, `pharmacy-hero-large.webp`
+- `pharmacy-logo.webp`, `pharmacy-hero.webp`, `pharmacy-hero-large.webp` *(hero is currently a CSS gradient, not an image — see below)*
 - `service1.webp` – `service5.webp`
 - `product1.webp` – `product4.webp`
 - `employee1.webp` – `employee3.webp`
 - `facebook.webp`, `twitter.webp`, `instagram.webp`
+
+> Note: the homepage hero no longer uses `pharmacy-hero.webp` as a background photo — it's now a solid pine-green panel with the prescription-label graphic, by design. The image files are kept in case you want to reintroduce a photographic hero later.
 
 ## Project structure
 
 ```
 grace-pharmacy/
 ├── app/
-│   ├── layout.tsx          # Root layout: <Header>, <Footer>, global CSS
-│   ├── page.tsx             # Home page (hero, refill form, CTA)
-│   ├── globals.css          # All site styles (ported from the original CSS plan)
-│   ├── about/page.tsx
-│   ├── products/page.tsx
-│   └── contact/page.tsx
+│   ├── layout.tsx            # Root layout, global metadata, Header/Footer
+│   ├── page.tsx                # Home: hero, stats, services, refill form, CTA
+│   ├── globals.css             # Design tokens + all site styles
+│   ├── sitemap.ts               # Auto-generated sitemap.xml
+│   ├── robots.ts                 # robots.txt rules
+│   ├── favicon.ico
+│   ├── api/refill/route.ts        # Refill form submission handler
+│   ├── about/page.tsx              # Story timeline + services
+│   ├── products/page.tsx            # Featured products + price table
+│   └── contact/page.tsx               # Hours, team, map, FAQ
 ├── components/
-│   ├── Header.tsx            # Nav + mobile hamburger menu
+│   ├── Header.tsx              # Nav + mobile menu + Refill Rx CTA
 │   ├── Footer.tsx
-│   ├── Hero.tsx               # Reusable hero banner
-│   └── RefillForm.tsx          # Prescription refill form with validation
-├── public/images/             # Static images (placeholders — see above)
+│   ├── HomeHero.tsx              # Homepage hero with label widget
+│   ├── PageHero.tsx                # Simple hero for inner pages
+│   └── RefillForm.tsx                # Validated form wired to /api/refill
+├── public/images/                      # Static images (placeholders — see above)
 ├── next.config.js
 ├── tsconfig.json
 └── package.json
@@ -57,7 +74,7 @@ Visit http://localhost:3000
 ## Deploy to Vercel
 
 **Option A — via GitHub (recommended)**
-1. Push this folder to a new GitHub repository.
+1. Push this folder's *contents* to the root of a GitHub repository — `package.json` should be at the repo root, not nested in a subfolder.
 2. Go to [vercel.com/new](https://vercel.com/new) and import the repository.
 3. Vercel auto-detects Next.js — no config needed. Click **Deploy**.
 
@@ -66,9 +83,16 @@ Visit http://localhost:3000
 npm install -g vercel
 vercel
 ```
-Follow the prompts; Vercel will build and give you a live URL.
 
-## Notes
+## Wiring up real refill submissions
 
-- The contact page's Google Maps embed and the social links point to the same URLs as the original site — update them if needed.
-- The refill form currently only validates and shows a confirmation message client-side; it does not submit anywhere. Wire it up to an API route (`app/api/refill/route.ts`) or a third-party form service when you're ready to actually receive submissions.
+`app/api/refill/route.ts` validates submissions and currently just logs them server-side. To actually receive them, add one of:
+
+- **Email**: send via [Resend](https://resend.com) or similar from inside the route handler.
+- **SMS**: notify the pharmacist via Twilio.
+- **Database**: store in Vercel Postgres, Supabase, or another database, and build a simple internal view to see pending refills.
+
+## SEO notes
+
+- `app/layout.tsx` sets `metadataBase` to `https://gracepharmacy.vercel.app` — update this if you use a custom domain, since it's used to build canonical and Open Graph URLs.
+- The home page includes `Pharmacy` schema.org JSON-LD with address, phone, and opening hours — useful for Google Maps/local search. Update the address/hours there if they change.
