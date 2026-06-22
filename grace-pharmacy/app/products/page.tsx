@@ -2,131 +2,96 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import PageHero from '@/components/PageHero'
+import { catalog } from '@/lib/catalog'
 
 export const metadata: Metadata = {
   title: 'Products',
   description:
-    "Explore Grace Pharmacy's range of health and wellness products — pain relief, cold and flu remedies, vitamins, and home health devices.",
+    "Grace Pharmacy's full dispensary stock list — tablets, topicals, syrups, and supplies we carry in Morija.",
   alternates: { canonical: '/products' },
 }
 
-const products = [
-  {
-    img: 'product1',
-    alt: 'Pain relief medication',
-    tag: 'Dispensary & OTC',
-    name: 'Pain Relief Medication',
-    desc: 'Effective relief from headaches, muscle aches, and joint pain. Available in both prescription and over-the-counter options.',
-    specs: ['200mg tablets', '$15 / pack', '20 tablets / pack'],
-  },
-  {
-    img: 'product2',
-    alt: 'Cold and flu relief',
-    tag: 'OTC',
-    name: 'Cold & Flu Relief',
-    desc: 'Stay on top of your cold symptoms with our fast-acting cold and flu remedy, providing relief from congestion and fever.',
-    specs: ['500mg capsules', '$12 / pack', '10 capsules / pack'],
-  },
-  {
-    img: 'product3',
-    alt: 'Vitamins and supplements',
-    tag: 'Wellness',
-    name: 'Vitamins & Supplements',
-    desc: 'Boost your immunity and health with our range of vitamins, including Vitamin C, D, and multivitamins.',
-    specs: ['Capsules & gummies', '$10 / bottle', '30 servings / bottle'],
-  },
-  {
-    img: 'product4',
-    alt: 'Blood pressure monitor',
-    tag: 'Home device',
-    name: 'Blood Pressure Monitor',
-    desc: 'Track your health with ease using our reliable, easy-to-use blood pressure monitor for home use.',
-    specs: ['Digital, battery-operated', '$50', 'Monitor + batteries + case'],
-  },
-]
-
-const tableRows = [
-  ['Pain Relief Medication', '200mg tablets', '$15', '20 tablets per pack'],
-  ['Cold & Flu Relief', '500mg capsules', '$12', '10 capsules per pack'],
-  ['Vitamins & Supplements', 'Capsules and gummies', '$10', '30 servings per bottle'],
-  ['Blood Pressure Monitor', 'Digital', '$50', 'Monitor, batteries, case'],
-  ['Antibiotic Ointment', 'Topical cream', '$8', '15g tube'],
-  ['Allergy Relief', '10mg tablets', '$10', '14 tablets per pack'],
-]
+const totalItems = catalog.reduce((sum, c) => sum + c.items.length, 0)
 
 export default function ProductsPage() {
   return (
     <main>
       <PageHero
         eyebrow="On the shelf"
-        title="Everything you need for everyday health"
-        description="From dispensary medication to the things you grab on your way out — stocked, explained, and ready when you are."
+        title="What we stock"
+        description={`Our dispensary carries ${totalItems} medicines and supplies across ${catalog.length} categories. This is our real stock list — call ahead to confirm current availability before you visit.`}
       />
 
       <section className="section section-white">
         <div className="container">
           <div className="section-head">
-            <span className="eyebrow">Featured</span>
-            <h2>Popular products</h2>
+            <span className="eyebrow">Browse by category</span>
+            <h2>Full stock list</h2>
+            <p>
+              Tap a category to jump straight to it. Don&apos;t see what you need? Ask us &mdash;
+              we restock regularly and can often order items in.
+            </p>
           </div>
-          <div className="product-list">
-            {products.map((p) => (
-              <article className="product-card" key={p.img}>
-                <div className="product-media">
-                  <Image src={`/images/${p.img}.webp`} alt={p.alt} fill style={{ objectFit: 'cover' }} loading="lazy" />
-                </div>
-                <div className="product-body">
-                  <span className="label-tag">{p.tag}</span>
-                  <h3>{p.name}</h3>
-                  <p>{p.desc}</p>
-                  <div className="product-specs">
-                    {p.specs.map((s) => (
-                      <span key={s}>{s}</span>
-                    ))}
-                  </div>
-                </div>
-              </article>
+
+          <div className="category-jump">
+            {catalog.map((cat) => (
+              <a key={cat.name} href={`#${slugify(cat.name)}`}>
+                {cat.name}
+                <span className="category-jump-count">{cat.items.length}</span>
+              </a>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section" style={{ background: 'var(--parchment-dim)' }}>
-        <div className="container">
-          <div className="section-head">
-            <span className="eyebrow">Full list</span>
-            <h2>Available products</h2>
-            <p>Prices shown are guideline retail prices — ask in-store for current stock and insurance coverage.</p>
+      {catalog.map((cat, i) => (
+        <section
+          key={cat.name}
+          id={slugify(cat.name)}
+          className="section section-tight"
+          style={{ background: i % 2 === 0 ? 'var(--parchment-dim)' : 'var(--white)' }}
+        >
+          <div className="container">
+            <div className="category-block-head category-block-head--with-image">
+              <div>
+                <span className="eyebrow">{cat.items.length} items</span>
+                <h2>{cat.name}</h2>
+                <p className="category-blurb">{cat.blurb}</p>
+              </div>
+              <figure className="category-photo">
+                <Image
+                  src={cat.image.src}
+                  alt={cat.image.alt}
+                  width={400}
+                  height={280}
+                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  unoptimized
+                />
+                <figcaption>
+                  Photo:{' '}
+                  <a href={cat.image.creditUrl} target="_blank" rel="noopener noreferrer">
+                    {cat.image.credit}
+                  </a>{' '}
+                  / Pexels
+                </figcaption>
+              </figure>
+            </div>
+            <ul className="stock-grid">
+              {cat.items.map((item) => (
+                <li key={item} className="stock-chip">
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Dosage / Type</th>
-                  <th>Price</th>
-                  <th>Includes</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tableRows.map((row) => (
-                  <tr key={row[0]}>
-                    {row.map((cell, i) => (
-                      <td key={i}>{cell}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
+        </section>
+      ))}
 
       <section className="cta-banner">
         <div className="container">
           <span className="eyebrow">Not sure what you need?</span>
           <h2>Ask before you buy</h2>
-          <p>Our pharmacists can recommend the right product for your symptoms — no charge for the advice.</p>
+          <p>Our pharmacists can recommend the right product for your symptoms &mdash; no charge for the advice.</p>
           <Link href="/contact" className="btn btn-pine">
             Contact us
           </Link>
@@ -134,4 +99,8 @@ export default function ProductsPage() {
       </section>
     </main>
   )
+}
+
+function slugify(s: string) {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 }

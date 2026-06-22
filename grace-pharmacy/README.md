@@ -13,11 +13,26 @@ The site moves away from generic medical blue/teal toward an apothecary palette 
 
 The signature element is the **prescription-label motif**: rounded cards with a dashed/perforated top edge, used for the hero's opening-hours widget and throughout the services and product layouts.
 
+## Real product catalog
+
+The Products page now reflects Grace Pharmacy's actual 2019 dispensary stock list (117 items across 5 categories), sourced from `Grace_Pharmacy_2019_Stock_Control.xlsx`. The data lives in `lib/catalog.ts` and is rendered as a categorized, jump-linkable stock list — no prices are shown, since the source file only contains wholesale/purchase costs, not retail prices.
+
+To update the catalog later, edit `lib/catalog.ts` directly, or regenerate it from a new spreadsheet — each category is a `{ name, blurb, items, image }` object.
+
+A companion spreadsheet, `Grace_Pharmacy_Product_Catalog.xlsx`, organizes the same 117 items with their sourced wholesale costs (where available) and notes which purchase-order sheet each cost came from — useful for internal pricing decisions, but not used directly by the website.
+
+### Category photos
+
+Each category section on the Products page has a representative photo (tablets, a cream tube, cough syrup, softgel capsules, a blood pressure monitor). These are **generic stock photos, not photos of Grace Pharmacy's actual products** — there's no way to get a real photo of, say, your specific stocked paracetamol without you supplying one. They're loaded directly from Pexels' CDN under Pexels' free license (pexels.com/license), with photographer credit shown in a caption on each image. No files are stored in this repo for these — they're remote URLs in `lib/catalog.ts`, so if Pexels ever takes a photo down, swap in a new URL there.
+
+If you'd rather not use stock photos at all, set `unoptimized` aside and just delete the `<figure className="category-photo">` block in `app/products/page.tsx`, or replace `image.src` with your own photos under `public/images/`.
+
 ## What's new in this version
 
 - **Full visual redesign** — new color system, typography, hero, service/product cards, timeline, FAQ accordion, stats strip.
+- **Real product catalog** — see above.
 - **Working refill form** — `components/RefillForm.tsx` now submits to a real API route (`app/api/refill/route.ts`) with server-side validation, loading state, and success/error messaging. Currently the route logs submissions server-side; see "Wiring up real submissions" below to connect it to email, SMS, or a database.
-- **Richer content** — About page now has a founding story timeline; Contact page has opening hours, a team grid, and an FAQ section; Products page splits featured items from a full price table.
+- **Richer content** — About page now has a founding story timeline; Contact page has opening hours, a team grid, and an FAQ section.
 - **SEO** — per-page metadata (title templates, canonical URLs, Open Graph/Twitter tags), `app/sitemap.ts`, `app/robots.ts`, and `Pharmacy` JSON-LD structured data on the home page for local search/maps.
 - **Accessibility** — visible focus states, `aria-expanded`/`aria-controls` on the mobile menu, reduced-motion support, decorative images marked `aria-hidden`.
 
@@ -29,9 +44,10 @@ No real photos were provided, so `public/images/` contains **generated placehold
 
 - `pharmacy-logo.webp`, `pharmacy-hero.webp`, `pharmacy-hero-large.webp` *(hero is currently a CSS gradient, not an image — see below)*
 - `service1.webp` – `service5.webp`
-- `product1.webp` – `product4.webp`
 - `employee1.webp` – `employee3.webp`
 - `facebook.webp`, `twitter.webp`, `instagram.webp`
+
+`product1.webp` – `product4.webp` are no longer referenced anywhere (the Products page now renders the real stock list as text, not photographed products) and can be deleted if you like, or kept for future use.
 
 > Note: the homepage hero no longer uses `pharmacy-hero.webp` as a background photo — it's now a solid pine-green panel with the prescription-label graphic, by design. The image files are kept in case you want to reintroduce a photographic hero later.
 
@@ -48,7 +64,7 @@ grace-pharmacy/
 │   ├── favicon.ico
 │   ├── api/refill/route.ts        # Refill form submission handler
 │   ├── about/page.tsx              # Story timeline + services
-│   ├── products/page.tsx            # Featured products + price table
+│   ├── products/page.tsx            # Real categorized stock list
 │   └── contact/page.tsx               # Hours, team, map, FAQ
 ├── components/
 │   ├── Header.tsx              # Nav + mobile menu + Refill Rx CTA
@@ -56,6 +72,8 @@ grace-pharmacy/
 │   ├── HomeHero.tsx              # Homepage hero with label widget
 │   ├── PageHero.tsx                # Simple hero for inner pages
 │   └── RefillForm.tsx                # Validated form wired to /api/refill
+├── lib/
+│   └── catalog.ts                      # Real product catalog data (see above)
 ├── public/images/                      # Static images (placeholders — see above)
 ├── next.config.js
 ├── tsconfig.json

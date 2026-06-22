@@ -894,7 +894,139 @@ tr:hover td { background: #E9F0E5; }
 .social-links a:hover { background: var(--rust); }
 .social-links img { width: 16px; height: 16px; }
 
-/* ───────────────────────── Responsive ───────────────────────── */
+/* ───────────────────────── Stock catalog (category jump + chips) ───────────────────────── */
+.category-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.category-jump a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--white);
+  border: 1.5px solid var(--sage-line);
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--pine-deep);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.category-jump a:hover {
+  border-color: var(--rust);
+  background: var(--parchment-dim);
+}
+
+.category-jump-count {
+  background: var(--pine);
+  color: var(--parchment);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.5rem;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.category-block-head {
+  margin-bottom: 2rem;
+  scroll-margin-top: 90px;
+}
+
+.category-block-head--with-image {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.category-photo {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  aspect-ratio: 10/7;
+  position: relative;
+}
+
+.category-photo figcaption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(20,42,29,0.78), transparent);
+  color: rgba(246,241,228,0.92);
+  font-size: 0.68rem;
+  padding: 1.25rem 0.7rem 0.4rem;
+  font-family: var(--font-mono);
+}
+
+.category-photo figcaption a {
+  color: var(--parchment);
+  text-decoration: underline;
+  text-decoration-color: rgba(246,241,228,0.4);
+}
+
+.category-photo figcaption a:hover {
+  text-decoration-color: var(--parchment);
+}
+
+@media (max-width: 700px) {
+  .category-block-head--with-image {
+    grid-template-columns: 1fr;
+  }
+  .category-photo {
+    order: -1;
+    aspect-ratio: 16/9;
+  }
+}
+
+.category-block-head h2 {
+  font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+  margin-top: 0.5rem;
+}
+
+.category-blurb {
+  color: var(--ink-soft);
+  margin-top: 0.6rem;
+  max-width: 600px;
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.stock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+  list-style: none;
+}
+
+.stock-chip {
+  background: var(--white);
+  border: 1px solid var(--sage-line);
+  border-left: 3px solid var(--rust);
+  border-radius: var(--radius);
+  padding: 0.7rem 0.9rem;
+  font-size: 0.9rem;
+  color: var(--ink);
+  line-height: 1.4;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.stock-chip:hover {
+  box-shadow: var(--shadow-card);
+  border-left-color: var(--pine);
+}
+
+@media (max-width: 600px) {
+  .stock-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 420px) {
+  .stock-grid { grid-template-columns: 1fr; }
+}
 .refill-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -902,6 +1034,7 @@ tr:hover td { background: #E9F0E5; }
   align-items: start;
 }
 
+/* ───────────────────────── Responsive ───────────────────────── */
 @media (max-width: 900px) {
   .hero-inner { grid-template-columns: 1fr; }
   .hero-label { transform: none; max-width: 360px; }
