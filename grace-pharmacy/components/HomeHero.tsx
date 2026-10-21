@@ -15,7 +15,7 @@ export default function HomeHero() {
             consultations, and everyday health, handled by people who know your name.
           </p>
           <div className="hero-actions">
-            <Link href="#refill" className="btn btn-rust">
+            <Link href="#refill" className="btn btn-sky">
               Refill a prescription
             </Link>
             <Link href="/contact" className="btn btn-outline">

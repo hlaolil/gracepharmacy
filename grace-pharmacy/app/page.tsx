@@ -64,7 +64,7 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <HomeHero />
 
-      <section className="section-pine">
+      <section className="section-teal">
         <div className="container">
           <div className="stat-strip">
             <div className="stat-item">
@@ -108,7 +108,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section section-tight" id="refill" style={{ background: 'var(--parchment-dim)' }}>
+      <section className="section section-tight" id="refill" style={{ background: 'var(--mist-dim)' }}>
         <div className="container">
           <div className="refill-layout">
             <div className="section-head" style={{ marginBottom: 0 }}>
@@ -119,7 +119,7 @@ export default function HomePage() {
                 You&apos;ll get a call if anything needs checking first.
               </p>
               <p style={{ marginTop: '1.5rem' }}>
-                Prefer to talk it through? Call <a href="tel:+26656176099" style={{ color: 'var(--pine-deep)', fontWeight: 600 }}>+266 5617 6099</a> during opening hours.
+                Prefer to talk it through? Call <a href="tel:+26656176099" style={{ color: 'var(--teal-deep)', fontWeight: 600 }}>+266 5617 6099</a> during opening hours.
               </p>
             </div>
             <div className="refill-shell">
@@ -134,7 +134,7 @@ export default function HomePage() {
           <span className="eyebrow">Have a question first?</span>
           <h2>Talk to a pharmacist before you decide</h2>
           <p>No charge for a quick chat about symptoms, interactions, or what to stock at home.</p>
-          <Link href="/products" className="btn btn-pine">
+          <Link href="/products" className="btn btn-teal">
             Browse products &amp; services
           </Link>
         </div>

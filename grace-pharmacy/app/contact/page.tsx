@@ -71,7 +71,7 @@ export default function ContactPage() {
                 </div>
               </dl>
 
-              <div style={{ marginTop: '1.75rem', paddingTop: '1.5rem', borderTop: '1px dashed var(--sage-line)' }}>
+              <div style={{ marginTop: '1.75rem', paddingTop: '1.5rem', borderTop: '1px dashed var(--line)' }}>
                 <span className="eyebrow" style={{ marginBottom: '0.75rem', display: 'inline-flex' }}>Opening hours</span>
                 <table className="hours-table">
                   <tbody>
@@ -99,7 +99,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="section" style={{ background: 'var(--parchment-dim)' }}>
+      <section className="section" style={{ background: 'var(--mist-dim)' }}>
         <div className="container">
           <div className="section-head">
             <span className="eyebrow">Meet the team</span>

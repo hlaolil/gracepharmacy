@@ -151,7 +151,7 @@ export default function RefillForm() {
         {errors.notes && <p className="field-error">{errors.notes}</p>}
       </div>
 
-      <button type="submit" className="btn btn-pine btn-block" disabled={status === 'submitting'}>
+      <button type="submit" className="btn btn-teal btn-block" disabled={status === 'submitting'}>
         {status === 'submitting' ? 'Sending…' : 'Submit refill request'}
       </button>
 
