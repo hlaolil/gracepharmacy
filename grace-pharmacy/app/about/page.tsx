@@ -20,7 +20,7 @@ const services = [
 
 const photos = [
   { src: '/images/pick-up.webp', w: 794, h: 579, alt: 'The Grace Pharmacy counter with stocked shelves behind it', caption: 'The dispensary counter' },
-  { src: '/images/vaccination.webp', w: 311, h: 443, alt: 'Shelves of medicines beside an HIV self-testing poster', caption: 'Testing & immunizations' },
+  { src: '/images/vaccination.webp', w: 262, h: 270, alt: 'Shelves of medicines beside an HIV self-testing poster', caption: 'Testing & immunizations' },
   { src: '/images/wellness.webp', w: 877, h: 1004, alt: 'Two bottles of Zinplex Forte zinc and selenium supplement', caption: 'Vitamins & supplements' },
 ]
 

@@ -3,7 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import HomeHero from '@/components/HomeHero'
 import RefillForm from '@/components/RefillForm'
-import { site, siteUrl, primaryPhone, formatTime } from '@/lib/site'
+import { site, siteUrl, primaryPhone } from '@/lib/site'
+import { catalog } from '@/lib/catalog'
 
 export const metadata: Metadata = {
   title: 'Community Pharmacy in Morija, Lesotho',
@@ -16,8 +17,8 @@ const services = [
   {
     tag: 'Dispensary',
     title: 'Prescription refills',
-    body: 'Bring your script in or send it online. Most refills are ready the same day.',
-    meta: 'Same-day · In-store pickup',
+    body: 'Bring your script in or send it online, and we’ll call you if anything needs checking.',
+    meta: 'Online or in person',
   },
   {
     tag: 'Advice',
@@ -38,6 +39,8 @@ const services = [
     meta: 'Demonstration included',
   },
 ]
+
+const stockCount = catalog.reduce((sum, c) => sum + c.items.length, 0)
 
 export default function HomePage() {
   const jsonLd = {
@@ -77,14 +80,12 @@ export default function HomePage() {
         <div className="container">
           <div className="stat-strip">
             <div className="stat-item">
-              <div className="stat-num">{formatTime(site.hours[0].opens)}&ndash;{formatTime(site.hours[0].closes)}</div>
-              <div className="stat-label">
-                Mon&ndash;Fri &middot; Sat {formatTime(site.hours[1].opens)}&ndash;{formatTime(site.hours[1].closes)}
-              </div>
+              <div className="stat-num">{stockCount}</div>
+              <div className="stat-label">Medicines &amp; supplies on our stock list</div>
             </div>
             <div className="stat-item">
-              <div className="stat-num">Same-day</div>
-              <div className="stat-label">Most refills ready in hours</div>
+              <div className="stat-num">Free advice</div>
+              <div className="stat-label">Ask a pharmacist, no appointment</div>
             </div>
             <div className="stat-item">
               <div className="stat-num">A2 Road</div>
@@ -124,19 +125,20 @@ export default function HomePage() {
           <div className="photo-feature">
             <figure className="photo-frame">
               <Image
-                src="/images/pick-up.webp"
-                alt="The Grace Pharmacy counter, with shelves of medicines behind it and a glass display case in front"
-                width={794}
-                height={579}
+                src="/images/wellness.webp"
+                alt="Two bottles of Zinplex Forte zinc and selenium supplement on the counter"
+                width={877}
+                height={1004}
                 sizes="(max-width: 900px) 100vw, 560px"
               />
             </figure>
             <div className="section-head" style={{ marginBottom: 0 }}>
-              <span className="eyebrow">Inside the pharmacy</span>
-              <h2>A fully stocked counter on the A2</h2>
+              <span className="eyebrow">On our shelves</span>
+              <h2>More than prescriptions</h2>
               <p>
-                Prescription medicines behind the counter, everyday remedies and supplements in
-                front of it &mdash; and a pharmacist on hand to help you choose.
+                Vitamins and supplements, pain and cold remedies, skin care, and home health
+                devices like blood pressure monitors and glucometers &mdash; with a pharmacist on
+                hand to help you choose.
               </p>
               <p>
                 <Link href="/products" style={{ color: 'var(--sky-deep)', fontWeight: 600 }}>
@@ -174,9 +176,9 @@ export default function HomePage() {
           <span className="eyebrow">Have a question first?</span>
           <h2>Talk to a pharmacist before you decide</h2>
           <p>No charge for a quick chat about symptoms, interactions, or what to stock at home.</p>
-          <Link href="/products" className="btn btn-teal">
-            Browse products &amp; services
-          </Link>
+          <a href={`tel:${primaryPhone.tel}`} className="btn btn-teal">
+            Call {primaryPhone.display}
+          </a>
         </div>
       </section>
     </main>
