@@ -46,6 +46,7 @@ export default function AboutPage() {
   return (
     <main>
       <PageHero
+        image="/images/wellness.webp"
         eyebrow="About us"
         title="Health is wealth, and we mean that"
         description="Grace Pharmacy brings qualified pharmacists and a friendly counter to the A2 road in Morija — for prescriptions, consultations, and everything in between."

@@ -1,9 +1,12 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { site, formatTime } from '@/lib/site'
 
 export default function HomeHero() {
   return (
     <section className="hero">
+      <Image src="/images/pick-up.webp" alt="" fill priority sizes="100vw" className="hero-photo" />
+      <div className="hero-photo-overlay" aria-hidden="true" />
       <div className="hero-grain" aria-hidden="true" />
       <div className="hero-inner">
         <div className="hero-copy">

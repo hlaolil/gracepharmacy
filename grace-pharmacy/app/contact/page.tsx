@@ -35,6 +35,7 @@ export default function ContactPage() {
   return (
     <main>
       <PageHero
+        image="/images/pick-up.webp"
         eyebrow="Contact"
         title="We're easy to reach"
         description="Prescription questions, consultations, or just directions — our team is ready to help."
