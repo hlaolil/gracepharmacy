@@ -1147,3 +1147,17 @@ tr:hover td { background: #E8F2F9; }
   box-shadow: var(--shadow-lift);
 }
 .whatsapp-float:hover { background: #17633E; }
+
+/* ───────────────────────── Photo heroes ───────────────────────── */
+.hero-photo { object-fit: cover; z-index: -2; }
+
+.hero-photo-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(100deg, rgba(19,63,78,0.96) 0%, rgba(31,90,110,0.88) 45%, rgba(34,112,154,0.55) 100%);
+}
+
+@media (max-width: 900px) {
+  .hero-photo-overlay { background: rgba(19,63,78,0.88); }
+}

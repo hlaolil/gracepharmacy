@@ -17,6 +17,7 @@ export default function ProductsPage() {
   return (
     <main>
       <PageHero
+        image="/images/pick-up.webp"
         eyebrow="On the shelf"
         title="What we stock"
         description={`Our dispensary carries ${totalItems} medicines and supplies across ${catalog.length} categories. This is our real stock list — call ahead to confirm current availability before you visit.`}
