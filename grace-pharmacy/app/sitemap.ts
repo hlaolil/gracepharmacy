@@ -1,6 +1,5 @@
 import { MetadataRoute } from 'next'
-
-const siteUrl = 'https://gracepharmacy.vercel.app'
+import { siteUrl } from '@/lib/site'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = ['', '/about', '/products', '/contact']

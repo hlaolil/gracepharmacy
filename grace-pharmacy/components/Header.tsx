@@ -2,6 +2,8 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import LogoMark from '@/components/LogoMark'
+import { site } from '@/lib/site'
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -17,12 +19,11 @@ export default function Header() {
   return (
     <header className="site-header">
       <Link href="/" className="logo" onClick={() => setOpen(false)}>
-        <span className="logo-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7V3z" fill="#F2F8FC" />
-          </svg>
+        <LogoMark className="logo-mark" />
+        <span className="logo-words">
+          <span className="logo-text">{site.name}</span>
+          <span className="logo-tagline">{site.tagline}</span>
         </span>
-        <span className="logo-text">Grace Pharmacy</span>
       </Link>
 
       <button
