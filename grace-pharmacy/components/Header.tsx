@@ -19,7 +19,7 @@ export default function Header() {
       <Link href="/" className="logo" onClick={() => setOpen(false)}>
         <span className="logo-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7V3z" fill="#F6F1E4" />
+            <path d="M10 3h4v7h7v4h-7v7h-4v-7H3v-4h7V3z" fill="#F2F8FC" />
           </svg>
         </span>
         <span className="logo-text">Grace Pharmacy</span>
@@ -53,7 +53,7 @@ export default function Header() {
         </ul>
       </nav>
 
-      <Link href="/#refill" className="btn btn-rust header-cta">
+      <Link href="/#refill" className="btn btn-sky header-cta">
         Refill Rx
       </Link>
     </header>

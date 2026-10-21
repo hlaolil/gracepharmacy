@@ -49,7 +49,7 @@ export default function ProductsPage() {
           key={cat.name}
           id={slugify(cat.name)}
           className="section section-tight"
-          style={{ background: i % 2 === 0 ? 'var(--parchment-dim)' : 'var(--white)' }}
+          style={{ background: i % 2 === 0 ? 'var(--mist-dim)' : 'var(--white)' }}
         >
           <div className="container">
             <div className="category-block-head category-block-head--with-image">
@@ -92,7 +92,7 @@ export default function ProductsPage() {
           <span className="eyebrow">Not sure what you need?</span>
           <h2>Ask before you buy</h2>
           <p>Our pharmacists can recommend the right product for your symptoms &mdash; no charge for the advice.</p>
-          <Link href="/contact" className="btn btn-pine">
+          <Link href="/contact" className="btn btn-teal">
             Contact us
           </Link>
         </div>

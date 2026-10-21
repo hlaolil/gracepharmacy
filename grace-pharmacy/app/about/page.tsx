@@ -58,7 +58,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section" style={{ background: 'var(--parchment-dim)' }}>
+      <section className="section" style={{ background: 'var(--mist-dim)' }}>
         <div className="container">
           <div className="section-head">
             <span className="eyebrow">Our story</span>
@@ -104,7 +104,7 @@ export default function AboutPage() {
           <span className="eyebrow">Come say hello</span>
           <h2>We&apos;re easy to find on the A2</h2>
           <p>Stop by during opening hours, or reach out before you visit.</p>
-          <Link href="/contact" className="btn btn-pine">
+          <Link href="/contact" className="btn btn-teal">
             Get directions &amp; contact details
           </Link>
         </div>
