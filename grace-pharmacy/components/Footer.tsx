@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import Image from 'next/image'
+import LogoMark from '@/components/LogoMark'
+import { site, formatTime } from '@/lib/site'
 
 export default function Footer() {
   const year = new Date().getFullYear()
@@ -9,10 +10,12 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <span className="logo-text">Grace Pharmacy</span>
+            <div className="footer-logo">
+              <LogoMark className="logo-mark" />
+              <span className="logo-text">{site.name}</span>
+            </div>
             <p>
-              Community pharmacy on the A2 road in Morija, dispensing prescriptions, advice, and
-              a bit of grace since day one.
+              Community pharmacy on the A2 road in Morija &mdash; {site.tagline.toLowerCase()}.
             </p>
           </div>
 
@@ -29,27 +32,27 @@ export default function Footer() {
           <div className="footer-col">
             <h4>Visit</h4>
             <ul>
-              <li>Along A2 Road</li>
-              <li>Makotoane Complex</li>
-              <li>Morija 100, Lesotho</li>
-              <li><a href="tel:+26656176099">+266 5617 6099</a></li>
+              {site.address.lines.map((line) => <li key={line}>{line}</li>)}
+              <li><a href={site.directionsUrl} target="_blank" rel="noopener noreferrer">Get directions &rarr;</a></li>
+            </ul>
+          </div>
+
+          <div className="footer-col">
+            <h4>Contact</h4>
+            <ul>
+              {site.phones.map((p) => (
+                <li key={p.tel}><a href={`tel:${p.tel}`}>{p.display}</a></li>
+              ))}
+              <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+              {site.hours.map((h) => (
+                <li key={h.label}>{h.label}: {formatTime(h.opens)}&ndash;{formatTime(h.closes)}</li>
+              ))}
             </ul>
           </div>
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; {year} Grace Pharmacy &mdash; Morija, LS</p>
-          <nav className="social-links" aria-label="Social media">
-            <a href="https://facebook.com" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
-              <Image src="/images/facebook.webp" alt="" width={16} height={16} aria-hidden="true" />
-            </a>
-            <a href="https://twitter.com" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
-              <Image src="/images/twitter.webp" alt="" width={16} height={16} aria-hidden="true" />
-            </a>
-            <a href="https://instagram.com" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-              <Image src="/images/instagram.webp" alt="" width={16} height={16} aria-hidden="true" />
-            </a>
-          </nav>
+          <p>&copy; {year} {site.name} &mdash; Morija, Lesotho &middot; Reg. No. {site.regNumber}</p>
         </div>
       </div>
     </footer>

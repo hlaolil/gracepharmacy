@@ -1,25 +1,20 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import PageHero from '@/components/PageHero'
+import { site, primaryPhone, formatTime } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Contact Us',
   description:
-    'Reach Grace Pharmacy in Morija, Lesotho for prescription questions, consultations, or directions. Call +266 5617 6099 or visit us on the A2 road.',
+    `Reach Grace Pharmacy in Morija, Lesotho for prescription questions, consultations, or directions. Call ${primaryPhone.display} or visit us on the A2 road.`,
   alternates: { canonical: '/contact' },
 }
 
-const team = [
-  { img: 'employee1', alt: 'Head pharmacist', name: 'Dr. Emily Tae', role: 'Head Pharmacist' },
-  { img: 'employee2', alt: 'Pharmacy assistant', name: 'Joyce Morero', role: 'Pharmacy Assistant' },
-  { img: 'employee3', alt: 'Medical consultant', name: 'Sarah Hlaoli', role: 'Medical Consultant' },
-]
-
 const hours = [
-  ['Monday – Friday', '8:00 – 18:00'],
-  ['Saturday', '8:00 – 14:00'],
+  ...site.hours.map((h) => [h.label, `${formatTime(h.opens)} – ${formatTime(h.closes)}`]),
   ['Sunday', 'Closed'],
 ]
+
+const initials = (name: string) => name.split(' ').map((w) => w[0]).join('')
 
 const faqs = [
   {
@@ -32,7 +27,7 @@ const faqs = [
   },
   {
     q: 'Can you tell me if a medication is in stock?',
-    a: 'Call us at +266 5617 6099 and we will check while you are on the line.',
+    a: `Call us at ${primaryPhone.display} and we will check while you are on the line.`,
   },
 ]
 
@@ -54,20 +49,32 @@ export default function ContactPage() {
                 <div>
                   <dt>Address</dt>
                   <dd>
-                    Along A2 Road
+                    {site.address.lines.map((line, i) => (
+                      <span key={line}>
+                        {i > 0 && <br />}
+                        {line}
+                      </span>
+                    ))}
                     <br />
-                    Makotoane Complex
-                    <br />
-                    Morija 100, Lesotho
+                    <a href={site.directionsUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--sky-deep)', fontWeight: 600 }}>
+                      Get directions &rarr;
+                    </a>
                   </dd>
                 </div>
                 <div>
                   <dt>Email</dt>
-                  <dd><a href="mailto:grace@pharmacy.com">grace@pharmacy.com</a></dd>
+                  <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
                 </div>
                 <div>
                   <dt>Phone</dt>
-                  <dd><a href="tel:+26656176099">+266 5617 6099</a></dd>
+                  <dd>
+                    {site.phones.map((p, i) => (
+                      <span key={p.tel}>
+                        {i > 0 && <br />}
+                        <a href={`tel:${p.tel}`}>{p.display}</a>
+                      </span>
+                    ))}
+                  </dd>
                 </div>
               </dl>
 
@@ -102,18 +109,16 @@ export default function ContactPage() {
       <section className="section" style={{ background: 'var(--mist-dim)' }}>
         <div className="container">
           <div className="section-head">
-            <span className="eyebrow">Meet the team</span>
-            <h2>Who you&apos;ll talk to</h2>
+            <span className="eyebrow">Who we are</span>
+            <h2>The people behind the counter</h2>
           </div>
           <div className="team-grid">
-            {team.map((member) => (
-              <figure className="team-card" key={member.img}>
-                <div className="team-img">
-                  <Image src={`/images/${member.img}.webp`} alt={member.alt} fill style={{ objectFit: 'cover' }} loading="lazy" />
-                </div>
+            {site.directors.map((name) => (
+              <figure className="team-card" key={name}>
+                <div className="team-initials" aria-hidden="true">{initials(name)}</div>
                 <div className="team-info">
-                  <span className="label-tag">{member.role}</span>
-                  <h3>{member.name}</h3>
+                  <span className="label-tag">Director</span>
+                  <h3>{name}</h3>
                 </div>
               </figure>
             ))}

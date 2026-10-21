@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { site, formatTime } from '@/lib/site'
 
 export default function HomeHero() {
   return (
@@ -31,7 +32,13 @@ export default function HomeHero() {
           </div>
           <dl>
             <dt>Open</dt>
-            <dd>Mon&ndash;Sat, 8am&ndash;6pm</dd>
+            <dd>
+              {site.hours.map((h) => (
+                <span key={h.label} style={{ display: 'block' }}>
+                  {h.days.length > 1 ? 'Mon–Fri' : h.label.slice(0, 3)} {formatTime(h.opens)}&ndash;{formatTime(h.closes)}
+                </span>
+              ))}
+            </dd>
             <dt>Pharmacist</dt>
             <dd>On site, every day we&apos;re open</dd>
             <dt>Location</dt>

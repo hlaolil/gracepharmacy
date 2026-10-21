@@ -11,11 +11,17 @@ export const metadata: Metadata = {
 }
 
 const services = [
-  { img: 'service1', alt: 'Prescription refills', tag: 'Dispensary', title: 'Prescription Refills' },
-  { img: 'service2', alt: 'Health consultations', tag: 'Advice', title: 'Health Consultations' },
-  { img: 'service3', alt: 'Over-the-counter products', tag: 'Shelf', title: 'OTC Products' },
-  { img: 'service4', alt: 'Medical equipment', tag: 'Equipment', title: 'Medical Equipment' },
-  { img: 'service5', alt: 'Immunizations', tag: 'Clinic', title: 'Immunizations' },
+  { tag: 'Dispensary', title: 'Prescription refills', body: 'Hand in your script at the counter or send it online for pickup.' },
+  { tag: 'Advice', title: 'Health consultations', body: 'Talk through symptoms, side effects, and interactions with a pharmacist.' },
+  { tag: 'Shelf', title: 'Over-the-counter care', body: 'Pain relief, cold and flu, vitamins and supplements.' },
+  { tag: 'Equipment', title: 'Medical equipment', body: 'Blood pressure monitors, glucometers, and test strips.' },
+  { tag: 'Clinic', title: 'Immunizations & testing', body: 'Vaccinations and HIV self-test kits — ask at the counter.' },
+]
+
+const photos = [
+  { src: '/images/pick-up.webp', w: 794, h: 579, alt: 'The Grace Pharmacy counter with stocked shelves behind it', caption: 'The dispensary counter' },
+  { src: '/images/vaccination.webp', w: 311, h: 443, alt: 'Shelves of medicines beside an HIV self-testing poster', caption: 'Testing & immunizations' },
+  { src: '/images/wellness.webp', w: 877, h: 1004, alt: 'Two bottles of Zinplex Forte zinc and selenium supplement', caption: 'Vitamins & supplements' },
 ]
 
 const timeline = [
@@ -85,14 +91,27 @@ export default function AboutPage() {
           </div>
           <div className="label-grid">
             {services.map((s) => (
-              <figure className="label-card" key={s.img} style={{ paddingTop: 0, overflow: 'hidden' }}>
-                <div style={{ position: 'relative', aspectRatio: '4/3', margin: '0 -1.5rem 1rem', borderRadius: 0 }}>
-                  <Image src={`/images/${s.img}.webp`} alt={s.alt} fill style={{ objectFit: 'cover' }} loading="lazy" />
-                </div>
+              <article className="label-card" key={s.title}>
                 <span className="label-tag">{s.tag}</span>
-                <figcaption>
-                  <h3 style={{ marginTop: '0.4rem' }}>{s.title}</h3>
-                </figcaption>
+                <h3>{s.title}</h3>
+                <p>{s.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" style={{ background: 'var(--mist-dim)' }}>
+        <div className="container">
+          <div className="section-head">
+            <span className="eyebrow">Inside Grace Pharmacy</span>
+            <h2>Come and see for yourself</h2>
+          </div>
+          <div className="photo-gallery">
+            {photos.map((p) => (
+              <figure className="photo-frame" key={p.src}>
+                <Image src={p.src} alt={p.alt} fill sizes="(max-width: 900px) 50vw, 400px" style={{ objectFit: 'cover' }} loading="lazy" />
+                <figcaption>{p.caption}</figcaption>
               </figure>
             ))}
           </div>

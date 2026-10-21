@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import HomeHero from '@/components/HomeHero'
 import RefillForm from '@/components/RefillForm'
+import { site, siteUrl, primaryPhone, formatTime } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Community Pharmacy in Morija, Lesotho',
@@ -41,22 +43,29 @@ export default function HomePage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Pharmacy',
-    name: 'Grace Pharmacy',
+    name: site.name,
+    slogan: site.tagline,
+    url: siteUrl,
+    logo: `${siteUrl}/icon.svg`,
+    image: `${siteUrl}/images/pick-up.webp`,
     description:
       'Community pharmacy in Morija, Lesotho offering prescription refills, health consultations, and wellness products.',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Along A2 Road, Makotoane Complex',
-      addressLocality: 'Morija',
-      postalCode: '100',
-      addressCountry: 'LS',
+      streetAddress: site.address.street,
+      addressLocality: site.address.locality,
+      postalCode: site.address.postalCode,
+      addressCountry: site.address.country,
     },
-    telephone: '+266-5617-6099',
-    email: 'grace@pharmacy.com',
-    openingHoursSpecification: [
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:00', closes: '18:00' },
-      { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '08:00', closes: '14:00' },
-    ],
+    hasMap: site.directionsUrl,
+    telephone: site.phones.map((p) => p.tel),
+    email: site.email,
+    openingHoursSpecification: site.hours.map((h) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: h.days,
+      opens: h.opens,
+      closes: h.closes,
+    })),
   }
 
   return (
@@ -68,8 +77,10 @@ export default function HomePage() {
         <div className="container">
           <div className="stat-strip">
             <div className="stat-item">
-              <div className="stat-num">8am&ndash;6pm</div>
-              <div className="stat-label">Open Monday to Saturday</div>
+              <div className="stat-num">{formatTime(site.hours[0].opens)}&ndash;{formatTime(site.hours[0].closes)}</div>
+              <div className="stat-label">
+                Mon&ndash;Fri &middot; Sat {formatTime(site.hours[1].opens)}&ndash;{formatTime(site.hours[1].closes)}
+              </div>
             </div>
             <div className="stat-item">
               <div className="stat-num">Same-day</div>
@@ -108,6 +119,35 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="section" style={{ background: 'var(--white)', paddingTop: 0 }}>
+        <div className="container">
+          <div className="photo-feature">
+            <figure className="photo-frame">
+              <Image
+                src="/images/pick-up.webp"
+                alt="The Grace Pharmacy counter, with shelves of medicines behind it and a glass display case in front"
+                width={794}
+                height={579}
+                sizes="(max-width: 900px) 100vw, 560px"
+              />
+            </figure>
+            <div className="section-head" style={{ marginBottom: 0 }}>
+              <span className="eyebrow">Inside the pharmacy</span>
+              <h2>A fully stocked counter on the A2</h2>
+              <p>
+                Prescription medicines behind the counter, everyday remedies and supplements in
+                front of it &mdash; and a pharmacist on hand to help you choose.
+              </p>
+              <p>
+                <Link href="/products" style={{ color: 'var(--sky-deep)', fontWeight: 600 }}>
+                  See what we stock &rarr;
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="section section-tight" id="refill" style={{ background: 'var(--mist-dim)' }}>
         <div className="container">
           <div className="refill-layout">
@@ -119,7 +159,7 @@ export default function HomePage() {
                 You&apos;ll get a call if anything needs checking first.
               </p>
               <p style={{ marginTop: '1.5rem' }}>
-                Prefer to talk it through? Call <a href="tel:+26656176099" style={{ color: 'var(--teal-deep)', fontWeight: 600 }}>+266 5617 6099</a> during opening hours.
+                Prefer to talk it through? Call <a href={`tel:${primaryPhone.tel}`} style={{ color: 'var(--teal-deep)', fontWeight: 600 }}>{primaryPhone.display}</a> during opening hours.
               </p>
             </div>
             <div className="refill-shell">
