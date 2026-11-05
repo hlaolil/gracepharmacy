@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { site, primaryPhone } from '@/lib/site'
+import { getDb, deleteExpiredRefills } from '@/lib/db'
 
 const NAME_RE = /^[A-Za-z\s]{2,80}$/
 const RX_RE = /^\d{3,12}$/
@@ -43,21 +44,61 @@ export async function POST(req: NextRequest) {
     receivedAt: new Date().toISOString(),
   }
 
+  // Deliver to whichever channels are configured: the Neon database (shown on the
+  // /staff page) and/or email. The request counts as received if either succeeds.
+  const hasDb = Boolean(process.env.DATABASE_URL)
   const apiKey = process.env.RESEND_API_KEY
-  if (!apiKey) {
-    // Without an email provider configured there is nobody to tell about the request,
-    // so in production say so rather than pretend it went through.
+
+  if (!hasDb && !apiKey) {
+    // Nowhere to send the request, so in production say so rather than pretend it went through.
     if (process.env.NODE_ENV === 'production') {
-      console.error('[refill request] RESEND_API_KEY is not set; request not delivered', request)
+      console.error('[refill request] no DATABASE_URL or RESEND_API_KEY set; request not delivered')
       return NextResponse.json(
         { error: `Online refills are unavailable right now. Please call us on ${primaryPhone.display}.` },
         { status: 503 }
       )
     }
-    console.log('[refill request] (dev, not emailed)', request)
-    return NextResponse.json({ message: 'Refill request received (development mode — not emailed).' })
+    console.log('[refill request] (dev, not saved or emailed)', request)
+    return NextResponse.json({ message: 'Refill request received (development mode — not saved or emailed).' })
   }
 
+  const [saved, emailed] = await Promise.all([
+    hasDb ? saveToDatabase(request) : Promise.resolve(false),
+    apiKey ? sendEmail(apiKey, request) : Promise.resolve(false),
+  ])
+
+  if (!saved && !emailed) {
+    return NextResponse.json(
+      { error: `We couldn't send your request. Please try again or call us on ${primaryPhone.display}.` },
+      { status: 502 }
+    )
+  }
+
+  return NextResponse.json(
+    { message: 'Refill request received. We will have it ready for pickup soon.' },
+    { status: 200 }
+  )
+}
+
+type RefillRequest = { name: string; prescription: string; phone: string; notes: string; receivedAt: string }
+
+async function saveToDatabase(request: RefillRequest) {
+  try {
+    const sql = await getDb()
+    if (!sql) return false
+    await sql`
+      INSERT INTO refill_requests (name, prescription, phone, notes)
+      VALUES (${request.name}, ${request.prescription}, ${request.phone}, ${request.notes})
+    `
+    await deleteExpiredRefills(sql)
+    return true
+  } catch (err) {
+    console.error('[refill request] database insert failed', err)
+    return false
+  }
+}
+
+async function sendEmail(apiKey: string, request: RefillRequest) {
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
@@ -76,15 +117,8 @@ export async function POST(req: NextRequest) {
   }).catch(() => null)
 
   if (!res?.ok) {
-    console.error('[refill request] email failed', res?.status, await res?.text(), request)
-    return NextResponse.json(
-      { error: `We couldn't send your request. Please try again or call us on ${primaryPhone.display}.` },
-      { status: 502 }
-    )
+    console.error('[refill request] email failed', res?.status, await res?.text())
+    return false
   }
-
-  return NextResponse.json(
-    { message: 'Refill request received. We will have it ready for pickup soon.' },
-    { status: 200 }
-  )
+  return true
 }
