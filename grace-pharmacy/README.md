@@ -38,7 +38,7 @@ If you'd rather not use stock photos at all, set `unoptimized` aside and just de
 
 - **Full visual redesign** — new color system, typography, hero, service/product cards, timeline, FAQ accordion, stats strip.
 - **Real product catalog** — see above.
-- **Working refill form** — `components/RefillForm.tsx` now submits to a real API route (`app/api/refill/route.ts`) with server-side validation, loading state, and success/error messaging. Requests are emailed to the pharmacy — see "Refill request emails" below.
+- **Working refill form** — `components/RefillForm.tsx` now submits to a real API route (`app/api/refill/route.ts`) with server-side validation, loading state, and success/error messaging. Requests are saved to a database and shown on a staff page — see "Refill requests" below.
 - **Richer content** — About page now has a founding story timeline; Contact page has opening hours, the directors, and an FAQ section.
 - **SEO** — per-page metadata (title templates, canonical URLs, Open Graph/Twitter tags), `app/sitemap.ts`, `app/robots.ts`, and `Pharmacy` JSON-LD structured data on the home page for local search/maps.
 - **Accessibility** — visible focus states, `aria-expanded`/`aria-controls` on the mobile menu, reduced-motion support, decorative images marked `aria-hidden`.
@@ -59,6 +59,7 @@ grace-pharmacy/
 │   ├── robots.ts                 # robots.txt rules
 │   ├── icon.svg                # Browser-tab icon (logo)
 │   ├── api/refill/route.ts        # Refill form submission handler
+│   ├── staff/                      # Password-protected refill dashboard
 │   ├── about/page.tsx              # Story timeline, services, photo gallery
 │   ├── products/page.tsx            # Real categorized stock list
 │   └── contact/page.tsx               # Hours, directors, map, FAQ
@@ -72,7 +73,9 @@ grace-pharmacy/
 │   └── RefillForm.tsx                # Validated form wired to /api/refill
 ├── lib/
 │   ├── catalog.ts                      # Real product catalog data (see above)
-│   └── site.ts                         # Hours, phones, email, address (see above)
+│   ├── site.ts                         # Hours, phones, email, address (see above)
+│   ├── db.ts                           # Neon Postgres connection + refill table
+│   └── staffAuth.ts                    # Staff page sign-in
 ├── public/images/                      # Real pharmacy photos
 ├── docs/                               # Design wireframes
 ├── next.config.js
@@ -102,17 +105,32 @@ npm install -g vercel
 vercel
 ```
 
-## Refill request emails
+## Refill requests: database and staff page
 
-`app/api/refill/route.ts` validates each request and emails it to the pharmacy using [Resend](https://resend.com). Set these environment variables in Vercel (Project → Settings → Environment Variables):
+Each refill request is saved to a **Neon Postgres** database and listed on a password-protected staff page at **`/staff`**, where staff can mark requests done. It can also be emailed (below). The request counts as received if either works.
+
+### Set up the database (one time)
+
+1. In Vercel, open the project → **Storage** → **Create Database** → **Neon** (free plan). Pick a region close to Lesotho (e.g. Frankfurt or another European region) and connect it to the project for all environments. This adds `DATABASE_URL` to the project automatically.
+2. In **Settings → Environment Variables**, add `STAFF_PASSWORD` — a long password only staff know. Changing it signs everyone out.
+3. Redeploy. The `refill_requests` table is created automatically on first use; there is nothing to run by hand.
+4. Visit `/staff`, sign in, and send a test request from the home page.
+
+Requests are **deleted automatically after 30 days** (`RETENTION_DAYS` in `lib/db.ts`), since they contain names, phone numbers and prescription numbers. Staff sessions last 12 hours.
+
+Code: `lib/db.ts` (connection, table, clean-up), `lib/staffAuth.ts` (sign-in cookie), `app/staff/` (pages), `app/api/refill/route.ts` (saving and emailing).
+
+### Optional: also email each request
+
+Requests can be emailed using [Resend](https://resend.com), in addition to the database:
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `RESEND_API_KEY` | yes | API key from your Resend account |
+| `RESEND_API_KEY` | for email | API key from your Resend account |
 | `REFILL_EMAIL_TO` | no | Where requests go — defaults to the email in `lib/site.ts` |
 | `REFILL_EMAIL_FROM` | no | Sender, e.g. `Grace Pharmacy <refills@yourdomain.com>` once a domain is verified in Resend. Defaults to Resend's test sender, which can only deliver to the Resend account's own email address. |
 
-Without `RESEND_API_KEY`, the production site tells customers online refills are unavailable and to call, instead of pretending the request went through. In development (`npm run dev`) requests are just logged.
+With neither `DATABASE_URL` nor `RESEND_API_KEY`, the production site tells customers online refills are unavailable and to call, instead of pretending the request went through. In development (`npm run dev`) requests are just logged.
 
 ## SEO notes
 

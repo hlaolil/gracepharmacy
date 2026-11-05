@@ -1160,3 +1160,44 @@ tr:hover td { background: #E8F2F9; }
 @media (max-width: 900px) {
   .hero-photo-overlay { background: rgba(19,63,78,0.88); }
 }
+
+/* ───────────────────────── Staff refill dashboard ───────────────────────── */
+.staff-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.staff-head h1 { font-size: clamp(1.8rem, 3.4vw, 2.4rem); margin-top: 0.5rem; }
+.staff-head p { color: var(--ink-soft); margin-top: 0.4rem; }
+
+.staff-section-title { font-size: 1.3rem; margin-bottom: 1rem; }
+.staff-empty { color: var(--ink-soft); background: var(--white); padding: 1.25rem; border-radius: var(--radius-lg); }
+
+.staff-list { list-style: none; display: grid; gap: 0.9rem; }
+
+.staff-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  border-left: 4px solid var(--sky);
+  box-shadow: var(--shadow-card);
+  padding: 1.1rem 1.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.staff-card.is-done { border-left-color: var(--line); opacity: 0.8; }
+.staff-card h3 { font-size: 1.15rem; }
+.staff-card dl { display: flex; flex-wrap: wrap; gap: 0.3rem 1.5rem; margin-top: 0.4rem; font-size: 0.95rem; }
+.staff-card dl > div { display: flex; gap: 0.4rem; }
+.staff-card dt { color: var(--ink-soft); }
+.staff-card dd { font-weight: 600; }
+.staff-card dd a { color: var(--sky-deep); }
+.staff-notes { margin-top: 0.5rem; color: var(--ink-soft); font-size: 0.95rem; white-space: pre-wrap; }
+
+.staff-done { margin-top: 2.5rem; }
+.staff-done summary { cursor: pointer; font-weight: 600; color: var(--teal-deep); margin-bottom: 1rem; }
