@@ -1215,3 +1215,14 @@ tr:hover td { background: #E8F3ED; }
 .badge { display: inline-block; font-size: 0.78rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 999px; background: var(--mist-dim); color: var(--ink-soft); margin-left: 0.5rem; vertical-align: middle; }
 .badge.due { background: #FDECC8; color: #7A4B00; }
 .badge.paused { background: #EEE; color: #555; }
+
+/* ---------- Live product list (from the stock system) ---------- */
+.product-chip { display: flex; flex-direction: column; gap: 0.35rem; }
+.product-name { font-weight: 600; }
+.product-desc { color: var(--ink-soft); font-size: 0.84rem; }
+.product-meta { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: auto; padding-top: 0.25rem; }
+.product-price { font-family: var(--font-display); font-weight: 600; color: var(--teal-deep); }
+.product-stock { font-size: 0.75rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 999px; white-space: nowrap; }
+.product-stock.in { background: var(--success-bg); color: var(--success-text); }
+.product-stock.out { background: #F3E6E3; color: var(--error); }
+.product-chip.is-out { opacity: 0.75; border-left-color: var(--line); }

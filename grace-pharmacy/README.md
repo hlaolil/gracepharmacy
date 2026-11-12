@@ -6,7 +6,8 @@ Features:
 
 - **Fast online refills** — patients send their prescription number; requests are saved to a database and shown to staff at `/staff`.
 - **Email refill reminders** — patients sign up on the home page (or staff enrol them at the counter), and get an email a few days before each refill is due. See [Refill reminders](#refill-reminders).
-- Pages: Home, About (story + photos), What We Stock (the categories on our LeMeRA authorisation), Contact (team, map, FAQ).
+- **Live product list** — What We Stock shows products, prices and in/out of stock straight from the till (the separate healing-hub-stock app). See [Live product list](#live-product-list).
+- Pages: Home, About (story + photos), What We Stock, Contact (team, map, FAQ).
 - SEO: per-page metadata, sitemap, robots.txt, and `Pharmacy` structured data for Google Maps / local search.
 
 ## Before launch: details to confirm
@@ -49,6 +50,19 @@ Vercel's free Hobby plan is meant for non-commercial use; check Vercel's plan te
 | `CRON_SECRET` | reminders | Any long random string; Vercel Cron sends it so only Vercel can trigger the daily run |
 | `REFILL_EMAIL_TO` | optional | Where refill requests are emailed (defaults to `email` in `lib/site.ts`) |
 | `NEXT_PUBLIC_SITE_URL` | optional | Public address if not `https://healinghubpharmacy.vercel.app` (used in links, sitemap and emails) |
+| `STOCK_API_URL` | live products | Address of the healing-hub-stock app, e.g. `https://healing-hub-stock.vercel.app`. See [Live product list](#live-product-list). |
+
+## Live product list
+
+The pharmacy's stock and till run in a separate app, **healing-hub-stock** (Flask + MongoDB). It publishes `/api/public/products`, and the What We Stock page reads it when `STOCK_API_URL` is set:
+
+- Only products ticked **Show on website** in the stock app appear.
+- Over-the-counter items show their price; **prescription-only items never show a price**.
+- Stock shows only as *In stock* / *Out of stock*, never the quantity. No costs are published.
+- The page refreshes at most every 5 minutes (`FEED_REVALIDATE_SECONDS` in `lib/stockFeed.ts`), so a busy day of browsing barely touches the stock database.
+- If `STOCK_API_URL` is unset or the stock app is unreachable, the page shows the category overview instead of an error.
+
+Code: `lib/stockFeed.ts`, `app/products/page.tsx`.
 
 ## Refill reminders
 
