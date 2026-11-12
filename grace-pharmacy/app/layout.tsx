@@ -5,32 +5,19 @@ import Footer from '@/components/Footer'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import { siteUrl } from '@/lib/site'
 
+const title = 'The Healing Hub Pharmacy | Community Pharmacy in Ha Leqele, Maseru'
+const description =
+  'The Healing Hub Pharmacy in Ha Leqele, Maseru — fast prescription refills, blood pressure and glucose checks, chronic-care support and free email refill reminders.'
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: {
-    default: 'Grace Pharmacy | Community Pharmacy in Morija, Lesotho',
-    template: '%s | Grace Pharmacy',
-  },
-  description:
-    'Grace Pharmacy is your trusted partner in health on the A2 road in Morija, Lesotho — prescription refills, health consultations, and quality pharmaceutical products.',
-  keywords: ['Grace Pharmacy', 'Morija pharmacy', 'Lesotho pharmacy', 'prescription refill', 'health consultation'],
+  title: { default: title, template: '%s | The Healing Hub Pharmacy' },
+  description,
+  keywords: ['Healing Hub Pharmacy', 'Ha Leqele pharmacy', 'Maseru pharmacy', 'Lesotho pharmacy', 'prescription refill', 'refill reminder'],
   authors: [{ name: 'Letlotlo Hlaoli' }],
   alternates: { canonical: '/' },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: siteUrl,
-    siteName: 'Grace Pharmacy',
-    title: 'Grace Pharmacy | Community Pharmacy in Morija, Lesotho',
-    description:
-      'Prescription refills, health consultations, and quality pharmaceutical products on the A2 road in Morija.',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'Grace Pharmacy | Community Pharmacy in Morija, Lesotho',
-    description:
-      'Prescription refills, health consultations, and quality pharmaceutical products on the A2 road in Morija.',
-  },
+  openGraph: { type: 'website', locale: 'en_US', url: siteUrl, siteName: 'The Healing Hub Pharmacy', title, description },
+  twitter: { card: 'summary', title, description },
   robots: { index: true, follow: true },
 }
 

@@ -1,92 +1,80 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import PageHero from '@/components/PageHero'
-import { catalog } from '@/lib/catalog'
+import { primaryPhone } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Products',
+  title: 'What We Stock',
   description:
-    "Grace Pharmacy's full dispensary stock list — tablets, topicals, syrups, and supplies we carry in Morija.",
+    'The Healing Hub Pharmacy is authorised by LeMeRA to supply prescription and over-the-counter medicines, herbal medicines, supplements, cosmetics and medical supplies in Ha Leqele, Maseru.',
   alternates: { canonical: '/products' },
 }
 
-const totalItems = catalog.reduce((sum, c) => sum + c.items.length, 0)
+// Categories follow the scope of our LeMeRA retail pharmacy authorisation.
+const categories = [
+  {
+    tag: 'Prescription',
+    title: 'Prescription medicines',
+    body: 'Medicines for long-term conditions such as high blood pressure, diabetes and HIV, and short courses like antibiotics. A valid prescription is needed.',
+  },
+  {
+    tag: 'Prescription',
+    title: 'Controlled medicines',
+    body: 'Dispensed only against a valid prescription, under a registered pharmacist’s supervision.',
+  },
+  {
+    tag: 'Shelf',
+    title: 'Over-the-counter medicines',
+    body: 'Pain and fever relief, cold and flu, allergy, stomach and skin remedies, with advice on what to take.',
+  },
+  {
+    tag: 'Shelf',
+    title: 'Packaged herbal medicines',
+    body: 'Registered, packaged herbal products. Ask a pharmacist whether they mix safely with your other medicines.',
+  },
+  {
+    tag: 'Wellness',
+    title: 'Supplements & cosmetics',
+    body: 'Vitamins, minerals and everyday skin and personal care.',
+  },
+  {
+    tag: 'Supplies',
+    title: 'Medical supplies',
+    body: 'First-aid items, dressings and everyday health supplies.',
+  },
+]
 
 export default function ProductsPage() {
   return (
     <main>
       <PageHero
-        image="/images/pick-up.webp"
+        image="/images/hh-dispensary.webp"
         eyebrow="On the shelf"
         title="What we stock"
-        description={`Our dispensary carries ${totalItems} medicines and supplies across ${catalog.length} categories. This is our real stock list — call ahead to confirm current availability before you visit.`}
+        description={`We are authorised to supply the categories below. Stock changes, so call ${primaryPhone.display} to check a specific item before you visit.`}
       />
 
       <section className="section section-white">
         <div className="container">
           <div className="section-head">
             <span className="eyebrow">Browse by category</span>
-            <h2>Full stock list</h2>
+            <h2>Our range</h2>
             <p>
-              Tap a category to jump straight to it. Don&apos;t see what you need? Ask us &mdash;
-              we restock regularly and can often order items in.
+              Don&apos;t see what you need? Ask us &mdash; we restock regularly and can often order
+              items in.
             </p>
           </div>
-
-          <div className="category-jump">
-            {catalog.map((cat) => (
-              <a key={cat.name} href={`#${slugify(cat.name)}`}>
-                {cat.name}
-                <span className="category-jump-count">{cat.items.length}</span>
-              </a>
+          <div className="label-grid">
+            {categories.map((c) => (
+              <article className="label-card" key={c.title}>
+                <span className="label-tag">{c.tag}</span>
+                <h3>{c.title}</h3>
+                <p>{c.body}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
-
-      {catalog.map((cat, i) => (
-        <section
-          key={cat.name}
-          id={slugify(cat.name)}
-          className="section section-tight"
-          style={{ background: i % 2 === 0 ? 'var(--mist-dim)' : 'var(--white)' }}
-        >
-          <div className="container">
-            <div className="category-block-head category-block-head--with-image">
-              <div>
-                <span className="eyebrow">{cat.items.length} items</span>
-                <h2>{cat.name}</h2>
-                <p className="category-blurb">{cat.blurb}</p>
-              </div>
-              <figure className="category-photo">
-                <Image
-                  src={cat.image.src}
-                  alt={cat.image.alt}
-                  width={400}
-                  height={280}
-                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                  unoptimized
-                />
-                <figcaption>
-                  Photo:{' '}
-                  <a href={cat.image.creditUrl} target="_blank" rel="noopener noreferrer">
-                    {cat.image.credit}
-                  </a>{' '}
-                  / Pexels
-                </figcaption>
-              </figure>
-            </div>
-            <ul className="stock-grid">
-              {cat.items.map((item) => (
-                <li key={item} className="stock-chip">
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      ))}
 
       <section className="cta-banner">
         <div className="container">
@@ -100,8 +88,4 @@ export default function ProductsPage() {
       </section>
     </main>
   )
-}
-
-function slugify(s: string) {
-  return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 }

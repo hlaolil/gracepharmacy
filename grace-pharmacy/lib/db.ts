@@ -1,8 +1,8 @@
 import postgres from 'postgres'
 
 // Neon Postgres connection. DATABASE_URL is added to the Vercel project automatically
-// when Neon is connected (Vercel → Storage → Neon). Without it, the site runs as before
-// and refill requests are only emailed.
+// when Neon is connected (Vercel → Storage → Neon). Without it, refill requests can only
+// be emailed and refill reminders are turned off.
 
 // Refill requests hold health details, so they are deleted after this many days.
 export const RETENTION_DAYS = 30
@@ -45,6 +45,28 @@ async function ensureSchema(sql: Sql) {
     )
   `
   await sql`CREATE INDEX IF NOT EXISTS refill_requests_created_at_idx ON refill_requests (created_at)`
+
+  // Email refill reminders (see lib/reminders.ts). A row stays until the patient
+  // unsubscribes or staff delete it. "medicine" is a staff-only note and is never emailed.
+  await sql`
+    CREATE TABLE IF NOT EXISTS refill_reminders (
+      id                 bigint GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      name               text NOT NULL,
+      email              text NOT NULL,
+      phone              text NOT NULL DEFAULT '',
+      medicine           text NOT NULL DEFAULT '',
+      interval_days      integer NOT NULL CHECK (interval_days BETWEEN 7 AND 180),
+      next_due           date NOT NULL,
+      remind_days_before integer NOT NULL DEFAULT 3 CHECK (remind_days_before BETWEEN 0 AND 14),
+      active             boolean NOT NULL DEFAULT true,
+      last_reminded_for  date,
+      last_sent_at       timestamptz,
+      token              text NOT NULL UNIQUE,
+      source             text NOT NULL DEFAULT 'web' CHECK (source IN ('web', 'staff')),
+      created_at         timestamptz NOT NULL DEFAULT now()
+    )
+  `
+  await sql`CREATE INDEX IF NOT EXISTS refill_reminders_next_due_idx ON refill_reminders (next_due) WHERE active`
 }
 
 // Returns a ready-to-use client, or null when no database is configured.

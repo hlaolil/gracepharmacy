@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 // environment variable; a successful login sets a signed cookie that expires after
 // SESSION_HOURS. Changing STAFF_PASSWORD signs everyone out.
 
-export const STAFF_COOKIE = 'gp_staff'
+export const STAFF_COOKIE = 'hh_staff'
 const SESSION_HOURS = 12
 
 function sign(value: string, password: string) {

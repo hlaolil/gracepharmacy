@@ -1,87 +1,27 @@
-# Grace Pharmacy — Next.js Site
+# The Healing Hub Pharmacy — Next.js Site
 
-A Next.js 14 (App Router) site for Grace Pharmacy, a community pharmacy in Morija, Lesotho. Built with a distinctive "apothecary label" visual identity, a working refill form, richer content, and SEO fundamentals — ready to deploy on Vercel.
+A Next.js 14 (App Router) site for The Healing Hub Pharmacy, Ha Leqele, Maseru, Lesotho. Built from the Grace Pharmacy site (this is the `healing-hub` branch; Grace Pharmacy stays on `main`).
 
-## Design
+Features:
 
-The colours come from Grace Pharmacy's own flyer and logo banner (`public/images/consultation.webp`):
+- **Fast online refills** — patients send their prescription number; requests are saved to a database and shown to staff at `/staff`.
+- **Email refill reminders** — patients sign up on the home page (or staff enrol them at the counter), and get an email a few days before each refill is due. See [Refill reminders](#refill-reminders).
+- Pages: Home, About (story + photos), What We Stock (the categories on our LeMeRA authorisation), Contact (team, map, FAQ).
+- SEO: per-page metadata, sitemap, robots.txt, and `Pharmacy` structured data for Google Maps / local search.
 
-- **Teal** (`#1F5A6E`) — the logo banner; headers, dark sections, footer
-- **Sky blue** (`#1D78B2`, light `#8FD0F2`) — the flyer background; buttons and accents
-- **Mist** (`#F2F8FC`) — light page background; **navy ink** (`#16313D`) for text
-- **Fraunces** (serif display) + **Inter** (body) + **JetBrains Mono** (labels, dosages, hours)
+## Before launch: details to confirm
 
-The logo (`components/LogoMark.tsx`, also `app/icon.svg` for the browser tab) is a redrawn mortar-and-pestle "Rx" mark from the flyer. The **prescription-label motif** — rounded cards with a dashed/perforated top edge — is used for the hero's opening-hours widget and the service cards.
+All business details live in **`lib/site.ts`**. These are still unconfirmed:
 
-## Business details
+| Detail | Now | What to do |
+| --- | --- | --- |
+| Opening hours | empty, so pages say "call us" | fill in `hours` |
+| Public email | `null`, so no email is shown | set `email` |
+| Map / directions | search for "Ha Leqele, Maseru" | swap `directionsUrl` / `mapEmbedUrl` for the exact pin |
+| WhatsApp | off | set `whatsapp` to show a chat button |
+| Logo | simple placeholder cross (`components/LogoMark.tsx`, `app/icon.svg`) | replace with the pharmacy's logo artwork |
 
-Opening hours, phone numbers, email, address, directions link and directors live in **`lib/site.ts`**, taken from the flyer. The header, footer, home page, contact page, structured data and refill email all read from there, so change a detail in that one file.
-
-- **WhatsApp:** set `whatsapp` in `lib/site.ts` (e.g. `'26656176099'`) once the number is confirmed to be on WhatsApp, and a floating "WhatsApp us" button appears on every page.
-- **Social media:** the footer has no social icons. Add them back with links to the pharmacy's real pages when those exist.
-
-## Real product catalog
-
-The Products page now reflects Grace Pharmacy's actual 2019 dispensary stock list (117 items across 5 categories), sourced from `Grace_Pharmacy_2019_Stock_Control.xlsx`. The data lives in `lib/catalog.ts` and is rendered as a categorized, jump-linkable stock list — no prices are shown, since the source file only contains wholesale/purchase costs, not retail prices.
-
-To update the catalog later, edit `lib/catalog.ts` directly, or regenerate it from a new spreadsheet — each category is a `{ name, blurb, items, image }` object.
-
-A companion spreadsheet, `Grace_Pharmacy_Product_Catalog.xlsx`, organizes the same 117 items with their sourced wholesale costs (where available) and notes which purchase-order sheet each cost came from — useful for internal pricing decisions, but not used directly by the website.
-
-### Category photos
-
-Each category section on the Products page has a representative photo (tablets, a cream tube, cough syrup, softgel capsules, a blood pressure monitor). These are **generic stock photos, not photos of Grace Pharmacy's actual products** — there's no way to get a real photo of, say, your specific stocked paracetamol without you supplying one. They're loaded directly from Pexels' CDN under Pexels' free license (pexels.com/license), with photographer credit shown in a caption on each image. No files are stored in this repo for these — they're remote URLs in `lib/catalog.ts`, so if Pexels ever takes a photo down, swap in a new URL there.
-
-If you'd rather not use stock photos at all, set `unoptimized` aside and just delete the `<figure className="category-photo">` block in `app/products/page.tsx`, or replace `image.src` with your own photos under `public/images/`.
-
-## What's new in this version
-
-- **Full visual redesign** — new color system, typography, hero, service/product cards, timeline, FAQ accordion, stats strip.
-- **Real product catalog** — see above.
-- **Working refill form** — `components/RefillForm.tsx` now submits to a real API route (`app/api/refill/route.ts`) with server-side validation, loading state, and success/error messaging. Requests are saved to a database and shown on a staff page — see "Refill requests" below.
-- **Richer content** — About page now has a founding story timeline; Contact page has opening hours, the directors, and an FAQ section.
-- **SEO** — per-page metadata (title templates, canonical URLs, Open Graph/Twitter tags), `app/sitemap.ts`, `app/robots.ts`, and `Pharmacy` JSON-LD structured data on the home page for local search/maps.
-- **Accessibility** — visible focus states, `aria-expanded`/`aria-controls` on the mobile menu, reduced-motion support, decorative images marked `aria-hidden`.
-
-## Photos
-
-`public/images/` holds the pharmacy's real photos: the counter (`pick-up.webp`), the testing/immunization shelf (`vaccination.webp`), supplements (`wellness.webp`), and the flyer (`consultation.webp`, used as the colour reference — not shown on the site). The home page features the counter photo; the About page has a gallery of all three. Add more real photos here as they become available. Design wireframes are in `docs/`.
-
-## Project structure
-
-```
-grace-pharmacy/
-├── app/
-│   ├── layout.tsx            # Root layout, global metadata, Header/Footer
-│   ├── page.tsx                # Home: hero, stats, services, refill form, CTA
-│   ├── globals.css             # Design tokens + all site styles
-│   ├── sitemap.ts               # Auto-generated sitemap.xml
-│   ├── robots.ts                 # robots.txt rules
-│   ├── icon.svg                # Browser-tab icon (logo)
-│   ├── api/refill/route.ts        # Refill form submission handler
-│   ├── staff/                      # Password-protected refill dashboard
-│   ├── about/page.tsx              # Story timeline, services, photo gallery
-│   ├── products/page.tsx            # Real categorized stock list
-│   └── contact/page.tsx               # Hours, directors, map, FAQ
-├── components/
-│   ├── Header.tsx              # Nav + mobile menu + Refill Rx CTA
-│   ├── Footer.tsx
-│   ├── LogoMark.tsx             # Mortar-and-pestle Rx logo
-│   ├── WhatsAppButton.tsx        # Shown only when lib/site.ts has a WhatsApp number
-│   ├── HomeHero.tsx              # Homepage hero with label widget
-│   ├── PageHero.tsx                # Simple hero for inner pages
-│   └── RefillForm.tsx                # Validated form wired to /api/refill
-├── lib/
-│   ├── catalog.ts                      # Real product catalog data (see above)
-│   ├── site.ts                         # Hours, phones, email, address (see above)
-│   ├── db.ts                           # Neon Postgres connection + refill table
-│   └── staffAuth.ts                    # Staff page sign-in
-├── public/images/                      # Real pharmacy photos
-├── docs/                               # Design wireframes
-├── next.config.js
-├── tsconfig.json
-└── package.json
-```
+Photos of the pharmacy are in `public/images/hh-*.webp`. Add staff photos there when available.
 
 ## Run locally
 
@@ -94,45 +34,53 @@ Visit http://localhost:3000
 
 ## Deploy to Vercel
 
-**Option A — via GitHub (recommended)**
-1. Push this folder's *contents* to the root of a GitHub repository — `package.json` should be at the repo root, not nested in a subfolder.
-2. Go to [vercel.com/new](https://vercel.com/new) and import the repository.
-3. Vercel auto-detects Next.js — no config needed. Click **Deploy**.
+1. Create a new Vercel project from this repository, branch `healing-hub`, with **Root Directory** set to `grace-pharmacy`. (Or copy this folder into its own repository.)
+2. **Storage → Create Database → Neon** (free plan, a region close to Lesotho). This adds `DATABASE_URL`.
+3. Add the environment variables below, then redeploy.
 
-**Option B — via Vercel CLI**
-```bash
-npm install -g vercel
-vercel
-```
+Vercel's free Hobby plan is meant for non-commercial use; check Vercel's plan terms for a business site.
 
-## Refill requests: database and staff page
-
-Each refill request is saved to a **Neon Postgres** database and listed on a password-protected staff page at **`/staff`**, where staff can mark requests done. It can also be emailed (below). The request counts as received if either works.
-
-### Set up the database (one time)
-
-1. In Vercel, open the project → **Storage** → **Create Database** → **Neon** (free plan). Pick a region close to Lesotho (e.g. Frankfurt or another European region) and connect it to the project for all environments. This adds `DATABASE_URL` to the project automatically.
-2. In **Settings → Environment Variables**, add `STAFF_PASSWORD` — a long password only staff know. Changing it signs everyone out.
-3. Redeploy. The `refill_requests` table is created automatically on first use; there is nothing to run by hand.
-4. Visit `/staff`, sign in, and send a test request from the home page.
-
-Requests are **deleted automatically after 30 days** (`RETENTION_DAYS` in `lib/db.ts`), since they contain names, phone numbers and prescription numbers. Staff sessions last 12 hours.
-
-Code: `lib/db.ts` (connection, table, clean-up), `lib/staffAuth.ts` (sign-in cookie), `app/staff/` (pages), `app/api/refill/route.ts` (saving and emailing).
-
-### Optional: also email each request
-
-Requests can be emailed using [Resend](https://resend.com), in addition to the database:
-
-| Variable | Required | Purpose |
+| Variable | Needed for | Purpose |
 | --- | --- | --- |
-| `RESEND_API_KEY` | for email | API key from your Resend account |
-| `REFILL_EMAIL_TO` | no | Where requests go — defaults to the email in `lib/site.ts` |
-| `REFILL_EMAIL_FROM` | no | Sender, e.g. `Grace Pharmacy <refills@yourdomain.com>` once a domain is verified in Resend. Defaults to Resend's test sender, which can only deliver to the Resend account's own email address. |
+| `DATABASE_URL` | refills + reminders | Added by Vercel when Neon is connected |
+| `STAFF_PASSWORD` | staff pages | Password for `/staff`; changing it signs everyone out |
+| `RESEND_API_KEY` | all email | API key from [Resend](https://resend.com) |
+| `EMAIL_FROM` | all email | Sender on a domain verified in Resend, e.g. `The Healing Hub Pharmacy <reminders@yourdomain.com>`. Without a verified domain, Resend only delivers to the account owner's own address. |
+| `CRON_SECRET` | reminders | Any long random string; Vercel Cron sends it so only Vercel can trigger the daily run |
+| `REFILL_EMAIL_TO` | optional | Where refill requests are emailed (defaults to `email` in `lib/site.ts`) |
+| `NEXT_PUBLIC_SITE_URL` | optional | Public address if not `https://healinghubpharmacy.vercel.app` (used in links, sitemap and emails) |
 
-With neither `DATABASE_URL` nor `RESEND_API_KEY`, the production site tells customers online refills are unavailable and to call, instead of pretending the request went through. In development (`npm run dev`) requests are just logged.
+## Refill reminders
 
-## SEO notes
+**How it works**
 
-- The site's public address defaults to `https://gracepharmacy.vercel.app`. If it's hosted anywhere else (e.g. a custom domain), set `NEXT_PUBLIC_SITE_URL` — canonical URLs, Open Graph, the sitemap, robots.txt and structured data all use it.
-- The home page includes `Pharmacy` schema.org JSON-LD built from `lib/site.ts` (address, phones, email, hours, map link) — useful for Google Maps/local search.
+- Patients sign up on the home page (`#reminders`) with their name, email, next refill date and how often they refill (every 4 weeks, 1, 2 or 3 months). They must tick a consent box. Staff can also add a patient at **`/staff/reminders`** after the patient agrees.
+- Every day at 08:00 Lesotho time, Vercel Cron calls `/api/reminders/run` (schedule in `vercel.json`). Anyone whose refill is due within 3 days gets one email for that due date.
+- When the patient collects, staff press **Collected today** and the next due date moves forward by their interval. If nobody presses it, the date moves on by itself once it is more than 7 days overdue, so next month's reminder still goes out.
+- Staff can also change a date, pause, remove, or press **Send due reminders now**.
+
+**Privacy**
+
+- Emails never name the medicine (inboxes are often shared). The optional "medicine" field is a staff-only note.
+- Every email has a one-click link to stop reminders. The link opens a confirmation page, and pressing the button deletes the patient's reminder record entirely.
+- Refill *requests* are still deleted automatically after 30 days.
+
+**Code**: `lib/reminders.ts` (logic and email wording), `lib/email.ts` (Resend), `lib/db.ts` (tables, created automatically), `app/api/reminders/` (sign-up and daily run), `app/staff/reminders/` (staff page), `app/reminders/unsubscribe/` (stop page), `components/ReminderSignupForm.tsx`.
+
+## Project structure
+
+```
+grace-pharmacy/
+├── app/
+│   ├── page.tsx                    # Home: hero, services, refill form, reminder sign-up
+│   ├── about/  products/  contact/
+│   ├── api/refill/route.ts         # Refill request handler
+│   ├── api/reminders/route.ts      # Reminder sign-up
+│   ├── api/reminders/run/route.ts  # Daily reminder job (Vercel Cron)
+│   ├── reminders/unsubscribe/      # Stop-reminders page
+│   └── staff/                      # Password-protected: requests + reminders
+├── components/                     # Header, Footer, forms, hero, StaffNav, HoursList
+├── lib/                            # site.ts, db.ts, email.ts, reminders.ts, staffAuth.ts
+├── public/images/                  # Pharmacy photos
+└── vercel.json                     # Cron schedule
+```

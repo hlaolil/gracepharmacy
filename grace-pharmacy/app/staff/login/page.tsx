@@ -29,7 +29,7 @@ export default function StaffLoginPage({ searchParams }: { searchParams: { error
       <div className="container" style={{ maxWidth: '440px' }}>
         <div className="refill-shell">
           <span className="eyebrow">Staff only</span>
-          <h1 style={{ fontSize: '1.8rem', margin: '0.6rem 0 1.25rem' }}>Refill requests</h1>
+          <h1 style={{ fontSize: '1.8rem', margin: '0.6rem 0 1.25rem' }}>Staff sign in</h1>
 
           {!staffPasswordConfigured() ? (
             <p className="form-status error">

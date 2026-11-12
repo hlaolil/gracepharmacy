@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { getDb, deleteExpiredRefills, RETENTION_DAYS, type RefillRow } from '@/lib/db'
 import { endStaffSession, isStaff } from '@/lib/staffAuth'
+import StaffNav from '@/components/StaffNav'
 
 export const metadata: Metadata = {
   title: 'Refill requests',
@@ -68,6 +69,7 @@ export default async function StaffPage() {
             <button type="submit" className="btn btn-ghost">Sign out</button>
           </form>
         </div>
+        <StaffNav current="requests" />
 
         {!sql ? (
           <p className="form-status error">

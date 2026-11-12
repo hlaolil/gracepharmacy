@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { site, primaryPhone } from '@/lib/site'
 import { getDb, deleteExpiredRefills } from '@/lib/db'
+import { sendEmail as deliverEmail } from '@/lib/email'
 
 const NAME_RE = /^[A-Za-z\s]{2,80}$/
 const RX_RE = /^\d{3,12}$/
@@ -47,7 +48,9 @@ export async function POST(req: NextRequest) {
   // Deliver to whichever channels are configured: the Neon database (shown on the
   // /staff page) and/or email. The request counts as received if either succeeds.
   const hasDb = Boolean(process.env.DATABASE_URL)
-  const apiKey = process.env.RESEND_API_KEY
+  // Email needs both a Resend key and somewhere to send it.
+  const emailTo = process.env.REFILL_EMAIL_TO ?? site.email
+  const apiKey = emailTo ? process.env.RESEND_API_KEY : undefined
 
   if (!hasDb && !apiKey) {
     // Nowhere to send the request, so in production say so rather than pretend it went through.
@@ -64,7 +67,7 @@ export async function POST(req: NextRequest) {
 
   const [saved, emailed] = await Promise.all([
     hasDb ? saveToDatabase(request) : Promise.resolve(false),
-    apiKey ? sendEmail(apiKey, request) : Promise.resolve(false),
+    apiKey && emailTo ? sendEmail(emailTo, request) : Promise.resolve(false),
   ])
 
   if (!saved && !emailed) {
@@ -98,27 +101,16 @@ async function saveToDatabase(request: RefillRequest) {
   }
 }
 
-async function sendEmail(apiKey: string, request: RefillRequest) {
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      from: process.env.REFILL_EMAIL_FROM ?? 'Grace Pharmacy website <onboarding@resend.dev>',
-      to: process.env.REFILL_EMAIL_TO ?? site.email,
-      subject: `Refill request: Rx ${request.prescription} — ${request.name}`,
-      text: [
-        `Name: ${request.name}`,
-        `Prescription number: ${request.prescription}`,
-        `Phone: ${request.phone}`,
-        `Notes: ${request.notes || '(none)'}`,
-        `Received: ${request.receivedAt}`,
-      ].join('\n'),
-    }),
-  }).catch(() => null)
-
-  if (!res?.ok) {
-    console.error('[refill request] email failed', res?.status, await res?.text())
-    return false
-  }
-  return true
+async function sendEmail(to: string, request: RefillRequest) {
+  return deliverEmail({
+    to,
+    subject: `Refill request: Rx ${request.prescription} — ${request.name}`,
+    text: [
+      `Name: ${request.name}`,
+      `Prescription number: ${request.prescription}`,
+      `Phone: ${request.phone}`,
+      `Notes: ${request.notes || '(none)'}`,
+      `Received: ${request.receivedAt}`,
+    ].join('\n'),
+  })
 }

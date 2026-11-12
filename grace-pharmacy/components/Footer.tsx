@@ -14,9 +14,7 @@ export default function Footer() {
               <LogoMark className="logo-mark" />
               <span className="logo-text">{site.name}</span>
             </div>
-            <p>
-              Community pharmacy on the A2 road in Morija &mdash; {site.tagline.toLowerCase()}.
-            </p>
+            <p>Community pharmacy in Ha Leqele, Maseru &mdash; {site.tagline.toLowerCase()}.</p>
           </div>
 
           <div className="footer-col">
@@ -24,7 +22,8 @@ export default function Footer() {
             <ul>
               <li><Link href="/">Home</Link></li>
               <li><Link href="/about">About Us</Link></li>
-              <li><Link href="/products">Products</Link></li>
+              <li><Link href="/products">What We Stock</Link></li>
+              <li><Link href="/#reminders">Refill Reminders</Link></li>
               <li><Link href="/contact">Contact Us</Link></li>
             </ul>
           </div>
@@ -43,7 +42,7 @@ export default function Footer() {
               {site.phones.map((p) => (
                 <li key={p.tel}><a href={`tel:${p.tel}`}>{p.display}</a></li>
               ))}
-              <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+              {site.email && <li><a href={`mailto:${site.email}`}>{site.email}</a></li>}
               {site.hours.map((h) => (
                 <li key={h.label}>{h.label}: {formatTime(h.opens)}&ndash;{formatTime(h.closes)}</li>
               ))}
@@ -52,7 +51,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; {year} {site.name} &mdash; Morija, Lesotho &middot; Reg. No. {site.regNumber}</p>
+          <p>&copy; {year} {site.name} (Pty) Ltd &mdash; Ha Leqele, Maseru &middot; Reg. No. {site.regNumber}</p>
         </div>
       </div>
     </footer>

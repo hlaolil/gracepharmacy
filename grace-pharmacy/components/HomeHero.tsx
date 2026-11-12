@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { site, primaryPhone, formatTime } from '@/lib/site'
+import { site, primaryPhone } from '@/lib/site'
+import HoursList from '@/components/HoursList'
 
 export default function HomeHero() {
   return (
@@ -8,31 +9,31 @@ export default function HomeHero() {
       <div className="hero-grain" aria-hidden="true" />
       <div className="hero-inner">
         <div className="hero-copy">
-          <span className="eyebrow">Morija, Lesotho &middot; Along the A2 road</span>
+          <span className="eyebrow">Ha Leqele &middot; Maseru, Lesotho</span>
           <h1>
-            Your prescription, <em>filled with care</em>.
+            Your prescription, <em>ready in minutes</em>.
           </h1>
           <p>
-            Grace Pharmacy is your local pharmacy in Makotoane Complex &mdash; prescriptions,
-            advice, and everyday health, from people who know your name.
+            {site.name} fills prescriptions fast, checks your blood pressure and glucose, and
+            emails you before every refill so you never run out.
           </p>
           <div className="hero-actions">
             <Link href="#refill" className="btn btn-sky">
               Refill a prescription
             </Link>
-            <a href={`tel:${primaryPhone.tel}`} className="btn btn-outline">
-              Call {primaryPhone.display}
-            </a>
+            <Link href="#reminders" className="btn btn-outline">
+              Get refill reminders
+            </Link>
           </div>
         </div>
 
         <div className="hero-visual">
           <figure className="hero-figure">
             <Image
-              src="/images/pick-up.webp"
-              alt="The Grace Pharmacy counter, with shelves of medicines behind it"
-              width={794}
-              height={579}
+              src="/images/hh-counter.webp"
+              alt="The Healing Hub Pharmacy counter, with stocked shelves behind it"
+              width={686}
+              height={668}
               priority
               sizes="(max-width: 900px) 100vw, 520px"
             />
@@ -42,18 +43,7 @@ export default function HomeHero() {
             <div className="label-row">
               <span className="label-title">Opening hours</span>
             </div>
-            <dl>
-              {site.hours.map((h) => (
-                <div key={h.label}>
-                  <dt>{h.label}</dt>
-                  <dd>{formatTime(h.opens)} &ndash; {formatTime(h.closes)}</dd>
-                </div>
-              ))}
-              <div>
-                <dt>Sunday</dt>
-                <dd>Closed</dd>
-              </div>
-            </dl>
+            <HoursList fallback={<>Call <a href={`tel:${primaryPhone.tel}`}>{primaryPhone.display}</a></>} />
           </div>
         </div>
       </div>

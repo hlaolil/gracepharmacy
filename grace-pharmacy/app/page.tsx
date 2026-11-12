@@ -3,44 +3,42 @@ import Link from 'next/link'
 import Image from 'next/image'
 import HomeHero from '@/components/HomeHero'
 import RefillForm from '@/components/RefillForm'
+import ReminderSignupForm from '@/components/ReminderSignupForm'
 import { site, siteUrl, primaryPhone } from '@/lib/site'
-import { catalog } from '@/lib/catalog'
 
 export const metadata: Metadata = {
-  title: 'Community Pharmacy in Morija, Lesotho',
+  title: 'Community Pharmacy in Ha Leqele, Maseru',
   description:
-    'Grace Pharmacy is your trusted pharmacy on the A2 road in Morija — prescription refills, health consultations, and wellness products for the whole family.',
+    'The Healing Hub Pharmacy in Ha Leqele, Maseru — prescriptions ready in minutes, blood pressure and glucose checks, chronic-care support and free email refill reminders.',
   alternates: { canonical: '/' },
 }
 
 const services = [
   {
     tag: 'Dispensary',
-    title: 'Prescription refills',
-    body: 'Bring your script in or send it online, and we’ll call you if anything needs checking.',
+    title: 'Fast prescription refills',
+    body: 'Most prescriptions are ready in about 10 minutes. Send your prescription number online and skip the queue.',
     meta: 'Online or in person',
   },
   {
-    tag: 'Advice',
-    title: 'Health consultations',
-    body: 'Our pharmacists talk through symptoms, interactions, and what actually helps.',
-    meta: 'No appointment needed',
+    tag: 'Wellness Hub',
+    title: 'Blood pressure & glucose checks',
+    body: 'Quick checks at the counter, and counselling on living well with diabetes and high blood pressure.',
+    meta: 'Ask at the counter',
+  },
+  {
+    tag: 'Reminders',
+    title: 'Never run out',
+    body: 'Sign up once and we email you a few days before every refill is due. Free, and you can stop any time.',
+    meta: 'Free email service',
   },
   {
     tag: 'Shelf',
     title: 'Over-the-counter care',
-    body: 'Pain relief, cold and flu remedies, vitamins — stocked and explained, not just sold.',
+    body: 'Pain relief, cold and flu remedies, vitamins and supplements, with a pharmacist to help you choose.',
     meta: 'Walk-in',
   },
-  {
-    tag: 'Equipment',
-    title: 'Home health devices',
-    body: 'Blood pressure monitors and more, with a quick how-to-use from our staff.',
-    meta: 'Demonstration included',
-  },
 ]
-
-const stockCount = catalog.reduce((sum, c) => sum + c.items.length, 0)
 
 export default function HomePage() {
   const jsonLd = {
@@ -50,9 +48,9 @@ export default function HomePage() {
     slogan: site.tagline,
     url: siteUrl,
     logo: `${siteUrl}/icon.svg`,
-    image: `${siteUrl}/images/pick-up.webp`,
+    image: `${siteUrl}/images/hh-counter.webp`,
     description:
-      'Community pharmacy in Morija, Lesotho offering prescription refills, health consultations, and wellness products.',
+      'Community pharmacy in Ha Leqele, Maseru, Lesotho offering fast prescription refills, blood pressure and glucose checks, and email refill reminders.',
     address: {
       '@type': 'PostalAddress',
       streetAddress: site.address.street,
@@ -62,13 +60,17 @@ export default function HomePage() {
     },
     hasMap: site.directionsUrl,
     telephone: site.phones.map((p) => p.tel),
-    email: site.email,
-    openingHoursSpecification: site.hours.map((h) => ({
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: h.days,
-      opens: h.opens,
-      closes: h.closes,
-    })),
+    ...(site.email ? { email: site.email } : {}),
+    ...(site.hours.length
+      ? {
+          openingHoursSpecification: site.hours.map((h) => ({
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: h.days,
+            opens: h.opens,
+            closes: h.closes,
+          })),
+        }
+      : {}),
   }
 
   return (
@@ -80,16 +82,16 @@ export default function HomePage() {
         <div className="container">
           <div className="stat-strip">
             <div className="stat-item">
-              <div className="stat-num">{stockCount}</div>
-              <div className="stat-label">Medicines &amp; supplies on our stock list</div>
+              <div className="stat-num">~10 min</div>
+              <div className="stat-label">Typical wait for a prescription</div>
             </div>
             <div className="stat-item">
-              <div className="stat-num">Free advice</div>
-              <div className="stat-label">Ask a pharmacist, no appointment</div>
+              <div className="stat-num">Free reminders</div>
+              <div className="stat-label">An email before every refill is due</div>
             </div>
             <div className="stat-item">
-              <div className="stat-num">A2 Road</div>
-              <div className="stat-label">Makotoane Complex, Morija</div>
+              <div className="stat-num">Ha Leqele</div>
+              <div className="stat-label">Maseru, Lesotho</div>
             </div>
           </div>
         </div>
@@ -101,8 +103,8 @@ export default function HomePage() {
             <span className="eyebrow">What we do</span>
             <h2>Pharmacy care, without the wait</h2>
             <p>
-              From the dispensary counter to the shelf, everything at Grace Pharmacy is handled
-              by people who&apos;ll explain what they&apos;re giving you and why.
+              Fast refills for the medicines you take every month, and the support to keep your
+              blood pressure, sugar and other long-term conditions under control.
             </p>
           </div>
           <div className="label-grid">
@@ -125,10 +127,10 @@ export default function HomePage() {
           <div className="photo-feature">
             <figure className="photo-frame">
               <Image
-                src="/images/wellness.webp"
-                alt="Two bottles of Zinplex Forte zinc and selenium supplement on the counter"
-                width={877}
-                height={1004}
+                src="/images/hh-otc-display.webp"
+                alt="Glass display counter with over-the-counter medicines in front of stocked shelves"
+                width={655}
+                height={668}
                 sizes="(max-width: 900px) 100vw, 560px"
               />
             </figure>
@@ -136,9 +138,8 @@ export default function HomePage() {
               <span className="eyebrow">On our shelves</span>
               <h2>More than prescriptions</h2>
               <p>
-                Vitamins and supplements, pain and cold remedies, skin care, and home health
-                devices like blood pressure monitors and glucometers &mdash; with a pharmacist on
-                hand to help you choose.
+                Over-the-counter medicines, packaged herbal medicines, supplements, skin care and
+                medical supplies &mdash; with a pharmacist on hand to help you choose.
               </p>
               <p>
                 <Link href="/products" style={{ color: 'var(--sky-deep)', fontWeight: 600 }}>
@@ -161,7 +162,11 @@ export default function HomePage() {
                 You&apos;ll get a call if anything needs checking first.
               </p>
               <p style={{ marginTop: '1.5rem' }}>
-                Prefer to talk it through? Call <a href={`tel:${primaryPhone.tel}`} style={{ color: 'var(--teal-deep)', fontWeight: 600 }}>{primaryPhone.display}</a> during opening hours.
+                Prefer to talk it through? Call{' '}
+                <a href={`tel:${primaryPhone.tel}`} style={{ color: 'var(--teal-deep)', fontWeight: 600 }}>
+                  {primaryPhone.display}
+                </a>
+                .
               </p>
             </div>
             <div className="refill-shell">
@@ -171,11 +176,33 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="section section-tight" id="reminders" style={{ background: 'var(--white)' }}>
+        <div className="container">
+          <div className="refill-layout">
+            <div className="section-head" style={{ marginBottom: 0 }}>
+              <span className="eyebrow">Free refill reminders</span>
+              <h2>We&apos;ll email you before you run out</h2>
+              <p>
+                Taking medicine every month for blood pressure, diabetes, HIV or another
+                long-term condition? Tell us when your next refill is due and we&apos;ll email
+                you a few days before, every time.
+              </p>
+              <p style={{ marginTop: '1rem' }}>
+                Our emails never name your medicine, and every email has a link to stop them.
+              </p>
+            </div>
+            <div className="refill-shell">
+              <ReminderSignupForm />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="cta-banner">
         <div className="container" style={{ position: 'relative' }}>
           <span className="eyebrow">Have a question first?</span>
           <h2>Talk to a pharmacist before you decide</h2>
-          <p>No charge for a quick chat about symptoms, interactions, or what to stock at home.</p>
+          <p>No charge for a quick chat about symptoms, side effects, or your regular medicines.</p>
           <a href={`tel:${primaryPhone.tel}`} className="btn btn-teal">
             Call {primaryPhone.display}
           </a>

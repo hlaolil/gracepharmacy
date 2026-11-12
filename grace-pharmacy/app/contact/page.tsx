@@ -4,30 +4,32 @@ import { site, primaryPhone, formatTime } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Contact Us',
-  description:
-    `Reach Grace Pharmacy in Morija, Lesotho for prescription questions, consultations, or directions. Call ${primaryPhone.display} or visit us on the A2 road.`,
+  description: `Reach The Healing Hub Pharmacy in Ha Leqele, Maseru for prescription questions, health checks or directions. Call ${primaryPhone.display}.`,
   alternates: { canonical: '/contact' },
 }
 
-const hours = [
-  ...site.hours.map((h) => [h.label, `${formatTime(h.opens)} – ${formatTime(h.closes)}`]),
-  ['Sunday', 'Closed'],
-]
+const hours: string[][] = site.hours.length
+  ? [...site.hours.map((h) => [h.label, `${formatTime(h.opens)} – ${formatTime(h.closes)}`])]
+  : [['Opening hours', `Call ${primaryPhone.display}`]]
 
 const initials = (name: string) => name.split(' ').map((w) => w[0]).join('')
 
 const faqs = [
   {
     q: 'How do I refill a prescription online?',
-    a: 'Use the refill form on the home page — enter your name, prescription number, and phone number. We will call if anything needs checking before it is ready.',
+    a: 'Use the refill form on the home page — enter your name, prescription number and phone number. We will call if anything needs checking before it is ready.',
   },
   {
-    q: 'Do I need an appointment for a consultation?',
-    a: 'No. Walk in during opening hours and a pharmacist will see you, usually within a few minutes.',
+    q: 'How do the email refill reminders work?',
+    a: 'Sign up on the home page with your email address and the date your next refill is due. We email you a few days before, every time. The emails never name your medicine, and each one has a link to stop them.',
   },
   {
-    q: 'Can you tell me if a medication is in stock?',
-    a: `Call us at ${primaryPhone.display} and we will check while you are on the line.`,
+    q: 'Can I get my blood pressure or sugar checked?',
+    a: 'Yes. Ask at the counter for a blood pressure or glucose check, and a pharmacist will explain what your numbers mean.',
+  },
+  {
+    q: 'Can you tell me if a medicine is in stock?',
+    a: `Call us on ${primaryPhone.display} and we will check while you are on the line.`,
   },
 ]
 
@@ -35,10 +37,10 @@ export default function ContactPage() {
   return (
     <main>
       <PageHero
-        image="/images/pick-up.webp"
+        image="/images/hh-counter.webp"
         eyebrow="Contact"
         title="We're easy to reach"
-        description="Prescription questions, consultations, or just directions — our team is ready to help."
+        description="Prescription questions, health checks, or just directions — our team is ready to help."
       />
 
       <section className="section section-white">
@@ -62,10 +64,12 @@ export default function ContactPage() {
                     </a>
                   </dd>
                 </div>
-                <div>
-                  <dt>Email</dt>
-                  <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
-                </div>
+                {site.email && (
+                  <div>
+                    <dt>Email</dt>
+                    <dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+                  </div>
+                )}
                 <div>
                   <dt>Phone</dt>
                   <dd>
@@ -96,10 +100,10 @@ export default function ContactPage() {
 
             <div className="map-frame">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d4114.177796578349!2d27.493423676282006!3d-29.62188131181157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2sls!4v1730197705329!5m2!1sen!2sls"
+                src={site.mapEmbedUrl}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Grace Pharmacy location"
+                title={`${site.name} location`}
                 allowFullScreen
               />
             </div>
@@ -114,12 +118,12 @@ export default function ContactPage() {
             <h2>The people behind the counter</h2>
           </div>
           <div className="team-grid">
-            {site.directors.map((name) => (
-              <figure className="team-card" key={name}>
-                <div className="team-initials" aria-hidden="true">{initials(name)}</div>
+            {site.team.map((person) => (
+              <figure className="team-card" key={person.name}>
+                <div className="team-initials" aria-hidden="true">{initials(person.name)}</div>
                 <div className="team-info">
-                  <span className="label-tag">Director</span>
-                  <h3>{name}</h3>
+                  <span className="label-tag">{person.role}</span>
+                  <h3>{person.name}</h3>
                 </div>
               </figure>
             ))}

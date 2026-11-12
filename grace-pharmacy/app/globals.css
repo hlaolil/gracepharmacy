@@ -1,18 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Brand palette — taken from the Grace Pharmacy flyer & logo banner */
-  --teal: #1F5A6E;
-  --teal-deep: #133F4E;
-  --mist: #F2F8FC;
-  --mist-dim: #E2EFF7;
-  --sky: #1D78B2;
-  --sky-deep: #17679A;
-  --sky-light: #8FD0F2;
-  --ink: #16313D;
-  --ink-soft: #4A6270;
-  --steel: #8FC3E0;
-  --line: #C9DFEC;
+  /* Brand palette — The Healing Hub Pharmacy (greens) */
+  --teal: #1E5B4A;
+  --teal-deep: #134034;
+  --mist: #F3F8F5;
+  --mist-dim: #E3EFE8;
+  --sky: #2A7D56;
+  --sky-deep: #21664A;
+  --sky-light: #9FDDB9;
+  --ink: #17302A;
+  --ink-soft: #4A635A;
+  --steel: #9CCBB3;
+  --line: #CFE3D8;
   --white: #FFFFFF;
   --error: #B3422E;
   --success-bg: #E3F2EA;
@@ -23,8 +23,8 @@
 
   --radius: 4px;
   --radius-lg: 10px;
-  --shadow-card: 0 1px 2px rgba(22,49,61,0.06), 0 6px 18px rgba(22,49,61,0.07);
-  --shadow-lift: 0 10px 30px rgba(19,63,78,0.18);
+  --shadow-card: 0 1px 2px rgba(23,48,42,0.06), 0 6px 18px rgba(23,48,42,0.07);
+  --shadow-lift: 0 10px 30px rgba(19,64,52,0.18);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -236,7 +236,7 @@ nav.primary-nav a.active { color: var(--teal-deep); }
 /* ───────────────────────── Hero ───────────────────────── */
 .hero {
   position: relative;
-  background: linear-gradient(135deg, var(--teal-deep) 0%, var(--teal) 55%, #22709A 100%);
+  background: linear-gradient(135deg, var(--teal-deep) 0%, var(--teal) 55%, #2A7D56 100%);
   overflow: hidden;
   isolation: isolate;
 }
@@ -390,7 +390,7 @@ nav.primary-nav a.active { color: var(--teal-deep); }
   background: var(--teal);
   color: var(--mist);
 }
-.btn-teal:hover { background: var(--teal-deep); box-shadow: 0 8px 20px rgba(31,90,110,0.3); }
+.btn-teal:hover { background: var(--teal-deep); box-shadow: 0 8px 20px rgba(30,91,74,0.3); }
 
 .btn-ghost {
   background: transparent;
@@ -593,7 +593,7 @@ td {
 
 tr:last-child td { border-bottom: none; }
 tr:nth-child(even) td { background: var(--mist-dim); }
-tr:hover td { background: #E8F2F9; }
+tr:hover td { background: #E8F3ED; }
 
 /* ───────────────────────── Stats strip ───────────────────────── */
 .stat-strip {
@@ -815,7 +815,7 @@ tr:hover td { background: #E8F2F9; }
 .refill-shell textarea:focus {
   border-color: var(--teal);
   background: var(--white);
-  box-shadow: 0 0 0 3px rgba(31,90,110,0.12);
+  box-shadow: 0 0 0 3px rgba(30,91,74,0.12);
 }
 
 .refill-shell input.error { border-color: var(--error); background: #FBF0EE; }
@@ -948,7 +948,7 @@ tr:hover td { background: #E8F2F9; }
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(to top, rgba(19,63,78,0.78), transparent);
+  background: linear-gradient(to top, rgba(19,64,52,0.78), transparent);
   color: rgba(242,248,252,0.92);
   font-size: 0.8rem;
   padding: 1.25rem 0.7rem 0.4rem;
@@ -1088,12 +1088,11 @@ tr:hover td { background: #E8F2F9; }
 
 .photo-gallery {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
 
 .photo-gallery .photo-frame { position: relative; aspect-ratio: 3/4; margin: 0; }
-.photo-gallery .photo-frame:first-child { aspect-ratio: auto; }
 
 .photo-gallery figcaption {
   position: absolute;
@@ -1101,7 +1100,7 @@ tr:hover td { background: #E8F2F9; }
   right: 0;
   bottom: 0;
   padding: 1.5rem 0.9rem 0.7rem;
-  background: linear-gradient(to top, rgba(19,63,78,0.85), transparent);
+  background: linear-gradient(to top, rgba(19,64,52,0.85), transparent);
   color: var(--mist);
   font-family: var(--font-body);
   font-size: 0.8rem;
@@ -1111,7 +1110,6 @@ tr:hover td { background: #E8F2F9; }
 @media (max-width: 900px) {
   .photo-feature { grid-template-columns: 1fr; gap: 2rem; }
   .photo-gallery { grid-template-columns: 1fr 1fr; }
-  .photo-gallery .photo-frame:first-child { grid-column: 1 / -1; aspect-ratio: 4/3; }
 }
 
 /* ───────────────────────── Team (initials, no stock portraits) ───────────────────────── */
@@ -1120,7 +1118,7 @@ tr:hover td { background: #E8F2F9; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--teal-deep), var(--teal) 60%, #22709A);
+  background: linear-gradient(135deg, var(--teal-deep), var(--teal) 60%, #2A7D56);
   color: var(--mist);
   font-family: var(--font-display);
   font-size: 2.4rem;
@@ -1154,11 +1152,11 @@ tr:hover td { background: #E8F2F9; }
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(100deg, rgba(19,63,78,0.96) 0%, rgba(31,90,110,0.88) 45%, rgba(34,112,154,0.55) 100%);
+  background: linear-gradient(100deg, rgba(19,64,52,0.96) 0%, rgba(30,91,74,0.88) 45%, rgba(42,125,86,0.55) 100%);
 }
 
 @media (max-width: 900px) {
-  .hero-photo-overlay { background: rgba(19,63,78,0.88); }
+  .hero-photo-overlay { background: rgba(19,64,52,0.88); }
 }
 
 /* ───────────────────────── Staff refill dashboard ───────────────────────── */
@@ -1201,3 +1199,19 @@ tr:hover td { background: #E8F2F9; }
 
 .staff-done { margin-top: 2.5rem; }
 .staff-done summary { cursor: pointer; font-weight: 600; color: var(--teal-deep); margin-bottom: 1rem; }
+
+/* ---------- Refill reminders ---------- */
+.checkbox-row { display: flex; gap: 0.6rem; align-items: flex-start; }
+.checkbox-row input { width: auto; margin-top: 0.3rem; flex: none; }
+.checkbox-row label { font-weight: 400; margin: 0; }
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1rem; }
+@media (max-width: 600px) { .form-grid-2 { grid-template-columns: 1fr; } }
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.staff-nav { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.staff-nav a { padding: 0.45rem 0.9rem; border-radius: var(--radius); border: 1px solid var(--line); background: var(--white); color: var(--ink); font-weight: 600; }
+.staff-nav a.active { background: var(--teal); border-color: var(--teal); color: var(--white); }
+.staff-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.staff-actions form { margin: 0; }
+.badge { display: inline-block; font-size: 0.78rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 999px; background: var(--mist-dim); color: var(--ink-soft); margin-left: 0.5rem; vertical-align: middle; }
+.badge.due { background: #FDECC8; color: #7A4B00; }
+.badge.paused { background: #EEE; color: #555; }
